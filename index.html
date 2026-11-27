@@ -4,7 +4,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>કાલશોધ પંચાંગ — સંપૂર્ણ વેદિક એપ</title>
-    <script src="https://cdn.jsdelivr.net/npm/astronomy-engine@2.1.19/astronomy.browser.min.js"></script>
     <style>
         :root {
             --bg-dark: #120e07;
@@ -35,7 +34,7 @@
             flex-direction: column;
             align-items: center;
             min-height: 100vh;
-            padding-bottom: 70px;
+            padding-bottom: 75px;
         }
 
         .app-shell {
@@ -49,7 +48,6 @@
             flex-direction: column;
         }
 
-        /* Top Bar */
         .top-bar {
             display: flex;
             justify-content: space-between;
@@ -93,14 +91,13 @@
             background: var(--card-alt);
             color: var(--gold-light);
             border: 1px solid var(--gold-dim);
-            padding: 4px 7px;
+            padding: 5px 8px;
             border-radius: 8px;
             font-size: 0.75rem;
             outline: none;
             cursor: pointer;
         }
 
-        /* Global Date Bar */
         .global-date-bar {
             background: #140f08;
             padding: 8px 14px;
@@ -109,6 +106,8 @@
             align-items: center;
             border-bottom: 1px solid rgba(212, 175, 55, 0.18);
             font-size: 0.85rem;
+            flex-wrap: wrap;
+            gap: 6px;
         }
 
         .date-nav-group {
@@ -128,7 +127,6 @@
             font-weight: bold;
         }
 
-        /* Sections / Views */
         .view-section {
             display: none;
             padding: 12px;
@@ -140,7 +138,6 @@
             display: flex;
         }
 
-        /* Cards */
         .card {
             background: var(--card-alt);
             border: 1px solid rgba(212, 175, 55, 0.25);
@@ -160,19 +157,8 @@
             padding-bottom: 5px;
         }
 
-        /* Grids */
-        .grid-2 {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 8px;
-        }
-
-        .grid-4 {
-            display: grid;
-            grid-template-columns: repeat(4, 1fr);
-            gap: 6px;
-            text-align: center;
-        }
+        .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+        .grid-4 { display: grid; grid-template-columns: repeat(4, 1fr); gap: 6px; text-align: center; }
 
         .stat-box {
             background: #161108;
@@ -181,25 +167,10 @@
             border: 1px solid rgba(212, 175, 55, 0.15);
         }
 
-        .stat-label {
-            font-size: 0.7rem;
-            color: var(--text-muted);
-        }
+        .stat-label { font-size: 0.7rem; color: var(--text-muted); }
+        .stat-val { font-size: 0.88rem; font-weight: bold; color: var(--text-main); margin-top: 2px; }
+        .stat-sub { font-size: 0.68rem; color: var(--gold-primary); margin-top: 2px; }
 
-        .stat-val {
-            font-size: 0.88rem;
-            font-weight: bold;
-            color: var(--text-main);
-            margin-top: 2px;
-        }
-
-        .stat-sub {
-            font-size: 0.68rem;
-            color: var(--gold-primary);
-            margin-top: 2px;
-        }
-
-        /* Pill Tabs */
         .sub-tabs {
             display: flex;
             gap: 6px;
@@ -223,25 +194,11 @@
             white-space: nowrap;
         }
 
-        .sub-tab.active {
-            background: var(--gold-primary);
-            color: #120e07;
-        }
+        .sub-tab.active { background: var(--gold-primary); color: #120e07; }
 
-        /* Canvas Chakra */
-        .canvas-box {
-            width: 100%;
-            aspect-ratio: 1 / 1;
-            position: relative;
-        }
+        .canvas-box { width: 100%; aspect-ratio: 1 / 1; position: relative; }
+        canvas { width: 100%; height: 100%; border-radius: 50%; }
 
-        canvas {
-            width: 100%;
-            height: 100%;
-            border-radius: 50%;
-        }
-
-        /* Slider */
         input[type="range"] {
             width: 100%;
             -webkit-appearance: none;
@@ -261,44 +218,17 @@
             cursor: pointer;
         }
 
-        /* Tables */
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            font-size: 0.8rem;
-        }
-
-        th, td {
-            padding: 7px 5px;
-            border-bottom: 1px solid rgba(212, 175, 55, 0.15);
-            text-align: left;
-        }
-
-        th {
-            color: var(--gold-light);
-            font-size: 0.75rem;
-        }
+        table { width: 100%; border-collapse: collapse; font-size: 0.8rem; }
+        th, td { padding: 7px 5px; border-bottom: 1px solid rgba(212, 175, 55, 0.15); text-align: left; }
+        th { color: var(--gold-light); font-size: 0.75rem; }
 
         .badge-good { color: var(--good-green); font-weight: bold; }
         .badge-bad { color: var(--bad-red); font-weight: bold; }
         .badge-neutral { color: var(--warn-orange); font-weight: bold; }
         .row-active { background: rgba(212, 175, 55, 0.18); border-left: 3px solid var(--gold-light); }
 
-        /* Calendar Grid */
-        .cal-grid {
-            display: grid;
-            grid-template-columns: repeat(7, 1fr);
-            gap: 4px;
-            text-align: center;
-        }
-
-        .cal-head {
-            font-size: 0.72rem;
-            color: var(--gold-light);
-            padding: 4px 0;
-            font-weight: bold;
-        }
-
+        .cal-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 4px; text-align: center; }
+        .cal-head { font-size: 0.72rem; color: var(--gold-light); padding: 4px 0; font-weight: bold; }
         .cal-day {
             background: #161108;
             border: 1px solid rgba(212, 175, 55, 0.15);
@@ -310,17 +240,11 @@
             justify-content: space-between;
             cursor: pointer;
         }
-
-        .cal-day.today {
-            border: 1.5px solid var(--gold-light);
-            background: rgba(212, 175, 55, 0.15);
-        }
-
+        .cal-day.today { border: 1.5px solid var(--gold-light); background: rgba(212, 175, 55, 0.15); }
         .cal-day .g-date { font-size: 0.85rem; font-weight: bold; }
         .cal-day .h-tithi { font-size: 0.62rem; color: var(--text-muted); }
         .cal-day .fest-dot { width: 5px; height: 5px; background: #ff5252; border-radius: 50%; margin: 0 auto; }
 
-        /* Bottom Navigation */
         .bottom-nav {
             position: fixed;
             bottom: 0;
@@ -347,16 +271,9 @@
             padding: 4px 6px;
         }
 
-        .nav-item.active {
-            color: var(--gold-light);
-            font-weight: bold;
-        }
+        .nav-item.active { color: var(--gold-light); font-weight: bold; }
+        .nav-item span.icon { font-size: 1.2rem; }
 
-        .nav-item span.icon {
-            font-size: 1.2rem;
-        }
-
-        /* Inputs & Buttons */
         .form-input {
             width: 100%;
             background: #120e07;
@@ -379,7 +296,6 @@
             cursor: pointer;
         }
 
-        /* Print styles for Kundali */
         @media print {
             body * { visibility: hidden; }
             #view-kundali, #view-kundali * { visibility: visible; }
@@ -433,7 +349,6 @@
 
     <!-- ==================== TAB 1: TODAY'S PANCHANG & CLOCK ==================== -->
     <div id="view-panchang" class="view-section active">
-        <!-- Running Now Banner -->
         <div class="card" style="background: linear-gradient(145deg, #261d0e, #181208); border-color: var(--gold-primary);">
             <div style="display:flex; justify-content:space-between; align-items:center;">
                 <div>
@@ -449,7 +364,6 @@
             </div>
         </div>
 
-        <!-- Sun & Moon Rise/Set -->
         <div class="grid-4">
             <div class="stat-box">
                 <div class="stat-label">🌅 સૂર્યોદય</div>
@@ -469,7 +383,6 @@
             </div>
         </div>
 
-        <!-- Panchang 5 Angas with End Times -->
         <div class="card">
             <div class="card-title">
                 <span>આજનું પંચાંગ (સમાપ્તિ સમય સાથે)</span>
@@ -480,7 +393,6 @@
             </table>
         </div>
 
-        <!-- Running Choghadiya & Hora Quick Card -->
         <div class="grid-2">
             <div class="stat-box" style="border-color: var(--gold-dim);">
                 <div class="stat-label">⏳ હાલનું ચોઘડિયું</div>
@@ -494,7 +406,6 @@
             </div>
         </div>
 
-        <!-- Sankalp Mantra & Disha Yantra -->
         <div class="card">
             <div class="card-title">
                 <span>🙏 આજનો પૂજા સંકલ્પ મંત્ર</span>
@@ -503,19 +414,19 @@
             <p id="sankalpText" style="font-size:0.8rem; line-height:1.55; color:#f3dfb9; font-style:italic;"></p>
         </div>
 
-        <!-- Disha Yantra Compass -->
+        <!-- Disha Yantra Compass (Sensor + Manual Fallback) -->
         <div class="card">
             <div class="card-title">
-                <span>🧭 દિશા યંત્ર (વાસ્તુ ખૂણા)</span>
-                <button class="mini-btn" onclick="enableCompass()">સેન્સર ચાલુ કરો</button>
+                <span>🧭 દિશા યંત્ર (<span id="compassHeadingText">0° ઉત્તર</span>)</span>
+                <button class="mini-btn" id="btnSensor" onclick="enableCompass()">સેન્સર ચાલુ કરો</button>
             </div>
             <div style="display:flex; align-items:center; justify-content:space-around; padding:6px 0;">
-                <div id="compassDial" style="width:90px; height:90px; border-radius:50%; border:2px solid var(--gold-primary); position:relative; display:flex; align-items:center; justify-content:center; transition:transform 0.2s;">
-                    <span style="position:absolute; top:4px; font-size:0.7rem; color:#ff5252; font-weight:bold;">ઉ</span>
-                    <span style="position:absolute; bottom:4px; font-size:0.7rem;">દ</span>
-                    <span style="position:absolute; right:6px; font-size:0.7rem; color:var(--gold-light);">પૂ</span>
-                    <span style="position:absolute; left:6px; font-size:0.7rem;">પ</span>
-                    <div style="width:4px; height:36px; background:linear-gradient(to top, #fff 50%, #ff5252 50%); border-radius:2px;"></div>
+                <div id="compassDial" style="width:94px; height:94px; border-radius:50%; border:2px solid var(--gold-primary); position:relative; display:flex; align-items:center; justify-content:center; transition:transform 0.15s ease-out;">
+                    <span style="position:absolute; top:4px; font-size:0.75rem; color:#ff5252; font-weight:bold;">ઉ</span>
+                    <span style="position:absolute; bottom:4px; font-size:0.75rem;">દ</span>
+                    <span style="position:absolute; right:6px; font-size:0.75rem; color:var(--gold-light);">પૂ</span>
+                    <span style="position:absolute; left:6px; font-size:0.75rem;">પ</span>
+                    <div style="width:4px; height:38px; background:linear-gradient(to top, #fff 50%, #ff5252 50%); border-radius:2px;"></div>
                 </div>
                 <div style="font-size:0.76rem; line-height:1.6; color:var(--text-muted);">
                     <div>• <b>ઈશાન (ઉત્તર-પૂર્વ):</b> પૂજા / જળ</div>
@@ -524,10 +435,14 @@
                     <div>• <b>વાયવ્ય (ઉત્તર-પશ્ચિમ):</b> અતિથિ / વાયુ</div>
                 </div>
             </div>
+            <div style="margin-top:8px;">
+                <div style="font-size:0.7rem; color:var(--text-muted); margin-bottom:4px;">મેન્યુઅલ દિશા ચકાસણી (0° થી 360°):</div>
+                <input type="range" id="manualCompassSlider" min="0" max="360" value="0" oninput="setManualCompass(this.value)">
+            </div>
         </div>
     </div>
 
-    <!-- ==================== TAB 2: SKY CHAKRA (KALSHODH WHEEL) ==================== -->
+    <!-- ==================== TAB 2: SKY CHAKRA ==================== -->
     <div id="view-chakra" class="view-section">
         <div class="sub-tabs">
             <button class="sub-tab active" id="tabLagnaTop" onclick="setChakraMode('lagna')">લગ્ન ઉપર ટિકા</button>
@@ -563,4 +478,1160 @@
         <div class="sub-tabs">
             <button class="sub-tab active" id="mTabChoghadiya" onclick="showMuhuratSub('choghadiya')">ચોઘડિયા</button>
             <button class="sub-tab" id="mTabKaal" onclick="showMuhuratSub('kaal')">રાહુકાળ / મુહૂર્ત</button>
-            <button clas
+            <button class="sub-tab" id="mTabHora" onclick="showMuhuratSub('hora')">હોરા</button>
+        </div>
+
+        <div id="sub-choghadiya" class="card">
+            <div class="card-title"><span>☀️ દિવસના ચોઘડિયા</span><span id="dayDurationLabel" style="font-size:0.72rem;"></span></div>
+            <table id="dayChoghadiyaTable"></table>
+            <div class="card-title" style="margin-top:14px;"><span>🌙 રાત્રિના ચોઘડિયા</span><span id="nightDurationLabel" style="font-size:0.72rem;"></span></div>
+            <table id="nightChoghadiyaTable"></table>
+        </div>
+
+        <div id="sub-kaal" class="card" style="display:none;">
+            <div class="card-title"><span>🕒 શુભ અને અશુભ સમય</span></div>
+            <table id="kaalTable"></table>
+            <div class="card-title" style="margin-top:14px;"><span>✨ વિશેષ યોગ અને પંચક</span></div>
+            <div id="specialYogasBox" style="font-size:0.82rem; line-height:1.6;"></div>
+        </div>
+
+        <div id="sub-hora" class="card" style="display:none;">
+            <div class="card-title"><span>🪐 ૨૪ કલાકની ગ્રહ હોરા</span></div>
+            <table id="horaTable"></table>
+        </div>
+    </div>
+
+    <!-- ==================== TAB 4: JANAM KUNDALI ==================== -->
+    <div id="view-kundali" class="view-section">
+        <div class="sub-tabs">
+            <button class="sub-tab active" id="kTabChart" onclick="showKundaliSub('chart')">કુંડળી</button>
+            <button class="sub-tab" id="kTabDasha" onclick="showKundaliSub('dasha')">વિંશોત્તરી દશા</button>
+            <button class="sub-tab" id="kTabMilan" onclick="showKundaliSub('milan')">ગુણ મિલાન</button>
+            <button class="sub-tab" id="kTabSaved" onclick="showKundaliSub('saved')">સેવ કરેલી</button>
+        </div>
+
+        <div id="ksub-chart" class="card">
+            <div class="card-title">
+                <span>જન્મ કુંડળી</span>
+                <div style="display:flex; gap:5px;">
+                    <select id="chartStyleSelect" class="mini-select" onchange="renderKundaliSection()">
+                        <option value="north">ઉત્તર ભારતીય</option>
+                        <option value="south">દક્ષિણ ભારતીય</option>
+                    </select>
+                    <button class="mini-btn" onclick="saveCurrentKundali()">💾 સેવ</button>
+                    <button class="mini-btn" onclick="window.print()">🖨️</button>
+                </div>
+            </div>
+
+            <div class="grid-2" style="margin-bottom:8px; font-size:0.76rem;" id="kundaliSummaryMeta"></div>
+            <div id="kundaliChartBox" style="width:100%; max-width:320px; margin:0 auto;"></div>
+            <div id="doshaBox" style="margin-top:10px; padding:8px; background:#140f08; border-radius:8px; font-size:0.78rem; line-height:1.5;"></div>
+
+            <table style="margin-top:10px;" id="kundaliPlanetTable">
+                <thead>
+                    <tr><th>ગ્રહ</th><th>ભાવ</th><th>રાશિ</th><th>અંશ</th><th>નક્ષત્ર</th></tr>
+                </thead>
+                <tbody></tbody>
+            </table>
+        </div>
+
+        <div id="ksub-dasha" class="card" style="display:none;">
+            <div class="card-title"><span>⏳ વિંશોત્તરી મહાદશા (૧૨૦ વર્ષ)</span></div>
+            <div id="dashaList" style="font-size:0.8rem;"></div>
+        </div>
+
+        <div id="ksub-milan" class="card" style="display:none;">
+            <div class="card-title"><span>💑 અષ્ટકૂટ ગુણ મિલાન (૩૬ ગુણ)</span></div>
+            <div style="display:flex; flex-direction:column; gap:8px; font-size:0.8rem;">
+                <div>
+                    <label>વર (છોકરા) ની જન્મ તારીખ અને સમય:</label>
+                    <input type="datetime-local" id="boyDob" class="form-input" value="1998-05-15T10:30">
+                </div>
+                <div>
+                    <label>કન્યા (છોકરી) ની જન્મ તારીખ અને સમય:</label>
+                    <input type="datetime-local" id="girlDob" class="form-input" value="2000-08-20T14:15">
+                </div>
+                <button class="btn-gold" onclick="calculateGunaMilan()">ગુણ મિલાન કરો</button>
+                <div id="milanResultBox" style="margin-top:6px;"></div>
+            </div>
+        </div>
+
+        <div id="ksub-saved" class="card" style="display:none;">
+            <div class="card-title"><span>📂 સેવ કરેલી કુંડળીઓ</span></div>
+            <div id="savedKundaliList" style="font-size:0.8rem;"></div>
+        </div>
+    </div>
+
+    <!-- ==================== TAB 5: CALENDAR 2026-27 & MY TITHI ==================== -->
+    <div id="view-calendar" class="view-section">
+        <div class="sub-tabs">
+            <button class="sub-tab active" id="cTabMonth" onclick="showCalSub('month')">માસિક કેલેન્ડર</button>
+            <button class="sub-tab" id="cTabFest" onclick="showCalSub('fest')">તહેવાર / વ્રત</button>
+            <button class="sub-tab" id="cTabMyTithi" onclick="showCalSub('mytithi')">મારી તિથિ</button>
+        </div>
+
+        <div id="csub-month" class="card">
+            <div class="card-title">
+                <button class="nav-arrow" onclick="shiftMonth(-1)">◀</button>
+                <span id="calMonthTitle">--</span>
+                <button class="nav-arrow" onclick="shiftMonth(1)">▶</button>
+            </div>
+            <div class="cal-grid" id="calendarGrid"></div>
+            <div id="monthVratSummary" style="margin-top:10px; font-size:0.78rem; line-height:1.6;"></div>
+        </div>
+
+        <div id="csub-fest" class="card" style="display:none;">
+            <div class="card-title"><span>🪔 મુખ્ય તહેવારો અને વ્રત (2026 - 2027)</span></div>
+            <div id="festivalListBox" style="font-size:0.8rem; max-height:60vh; overflow-y:auto;"></div>
+        </div>
+
+        <div id="csub-mytithi" class="card" style="display:none;">
+            <div class="card-title"><span>🎂 મારી તિથિ (જન્મદિવસ / શ્રાદ્ધ / પ્રસંગ)</span></div>
+            <div style="display:flex; flex-direction:column; gap:6px; margin-bottom:10px;">
+                <input type="text" id="myTithiTitle" class="form-input" placeholder="નામ (દા.ત. પિતાજીની પુણ્યતિથિ / જન્મદિવસ)">
+                <div class="grid-2">
+                    <select id="myTithiMonth" class="form-input"></select>
+                    <select id="myTithiVal" class="form-input"></select>
+                </div>
+                <button class="btn-gold" onclick="addMyTithi()">તિથિ સેવ કરો</button>
+            </div>
+            <div id="myTithiList" style="font-size:0.8rem;"></div>
+        </div>
+    </div>
+
+    <!-- Settings Modal -->
+    <div id="settingsModal" style="display:none; position:fixed; inset:0; background:rgba(0,0,0,0.85); z-index:100; justify-content:center; align-items:center; padding:15px;">
+        <div class="card" style="width:100%; max-width:380px; border-color:var(--gold-primary);">
+            <div class="card-title">
+                <span>⚙️ પંચાંગ સેટિંગ્સ</span>
+                <button class="mini-btn" onclick="closeSettings()">✕</button>
+            </div>
+            <div style="display:flex; flex-direction:column; gap:10px; font-size:0.82rem;">
+                <div>
+                    <label>અયનાંશ (Ayanamsa):</label>
+                    <select id="ayanamsaSelect" class="form-input" onchange="saveSettings()">
+                        <option value="lahiri">લહિરી (ચિત્રપક્ષ - ભારત સરકાર માન્ય)</option>
+                        <option value="raman">બી.વી. રમણ</option>
+                        <option value="kp">કૃષ્ણમૂર્તિ પદ્ધતિ (KP)</option>
+                    </select>
+                </div>
+                <div>
+                    <label>માસ ગણતરી (Calendar System):</label>
+                    <select id="monthSystemSelect" class="form-input" onchange="saveSettings()">
+                        <option value="amavasyant">અમાવાસ્યાંત (ગુજરાતી / મરાઠી)</option>
+                        <option value="purnimant">પૂર્ણિમાંત (ઉત્તર ભારતીય)</option>
+                    </select>
+                </div>
+                <button class="btn-gold" onclick="closeSettings()">સાચવો</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bottom Navigation -->
+    <nav class="bottom-nav">
+        <button class="nav-item active" id="nav-panchang" onclick="switchTab('panchang')">
+            <span class="icon">🕉️</span><span>પંચાંગ</span>
+        </button>
+        <button class="nav-item" id="nav-chakra" onclick="switchTab('chakra')">
+            <span class="icon">☸️</span><span>રાશિ ચક્ર</span>
+        </button>
+        <button class="nav-item" id="nav-muhurat" onclick="switchTab('muhurat')">
+            <span class="icon">⏳</span><span>ચોઘડિયા</span>
+        </button>
+        <button class="nav-item" id="nav-kundali" onclick="switchTab('kundali')">
+            <span class="icon">⊞</span><span>કુંડળી</span>
+        </button>
+        <button class="nav-item" id="nav-calendar" onclick="switchTab('calendar')">
+            <span class="icon">📅</span><span>કેલેન્ડર</span>
+        </button>
+    </nav>
+</div>
+
+<script>
+    // ==================== 100% BUILT-IN OFFLINE ASTRONOMY ENGINE (ZERO CDN) ====================
+    const DEG = Math.PI / 180;
+    const RAD = 180 / Math.PI;
+    function norm360(d) { return ((d % 360) + 360) % 360; }
+    function sinD(d) { return Math.sin(d * DEG); }
+    function cosD(d) { return Math.cos(d * DEG); }
+    function tanD(d) { return Math.tan(d * DEG); }
+    function atan2D(y, x) { return norm360(Math.atan2(y, x) * RAD); }
+
+    function getJulianDay(date) {
+        return (date.getTime() / 86400000.0) + 2440587.5;
+    }
+
+    // Geocentric Tropical Longitudes (Meeus / Keplerian Ephemeris)
+    function getTropicalPlanets(jd) {
+        const d = jd - 2451545.0; // Days from J2000.0
+        const T = d / 36525.0;
+
+        // Sun
+        const gSun = norm360(357.5291 + 0.98560028 * d);
+        const qSun = norm360(280.459 + 0.98564736 * d);
+        const sunLon = norm360(qSun + 1.915 * sinD(gSun) + 0.020 * sinD(2 * gSun));
+
+        // Moon
+        const L0 = norm360(218.316 + 13.176396 * d);
+        const Mm = norm360(134.963 + 13.064993 * d);
+        const F  = norm360(93.272 + 13.229350 * d);
+        const D  = norm360(297.850 + 12.190749 * d);
+        const moonLon = norm360(
+            L0 + 6.289 * sinD(Mm) + 1.274 * sinD(2 * D - Mm) +
+            0.658 * sinD(2 * D) + 0.214 * sinD(2 * Mm) -
+            0.186 * sinD(gSun) - 0.114 * sinD(2 * F)
+        );
+
+        // Helper for Heliocentric -> Geocentric conversion
+        const eEarth = 0.0167086 - 0.00004204 * T;
+        const rEarth = 1.000001018 * (1 - eEarth * eEarth) / (1 + eEarth * cosD(gSun));
+        const xE = rEarth * cosD(sunLon + 180);
+        const yE = rEarth * sinD(sunLon + 180);
+
+        function helioToGeo(N, i, w, a, e, M0, n) {
+            const M = norm360(M0 + n * d);
+            let E = M + e * RAD * sinD(M) * (1 + e * cosD(M));
+            const xv = a * (cosD(E) - e);
+            const yv = a * (Math.sqrt(1 - e * e) * sinD(E));
+            const v = atan2D(yv, xv);
+            const r = Math.hypot(xv, yv);
+            const xh = r * (cosD(N) * cosD(v + w) - sinD(N) * sinD(v + w) * cosD(i));
+            const yh = r * (sinD(N) * cosD(v + w) + cosD(N) * sinD(v + w) * cosD(i));
+            return atan2D(yh - yE, xh - xE);
+        }
+
+        const mercLon = helioToGeo(48.3313, 7.0047, 29.1241, 0.387098, 0.205635, 168.6562, 4.0923344368);
+        const venLon  = helioToGeo(76.6799, 3.3946, 54.8910, 0.723330, 0.006773, 48.0052,  1.6021302244);
+        const marsLon = helioToGeo(49.5574, 1.8497, 286.5016, 1.523688, 0.093405, 18.6021, 0.5240207766);
+        const jupLon  = helioToGeo(100.4542, 1.3030, 273.8777, 5.20256, 0.048498, 19.8950, 0.0830853001);
+        const satLon  = helioToGeo(113.6634, 2.4886, 339.3939, 9.55475, 0.055546, 316.9670, 0.0334442282);
+        const rahuTrop = norm360(125.04452 - 0.0529537648 * d);
+
+        return { sunLon, moonLon, marsLon, mercLon, jupLon, venLon, satLon, rahuTrop };
+    }
+
+    // Accurate Sunrise, Sunset, Moonrise & Moonset
+    function calcSunRiseSet(date, lat, lon) {
+        const start = new Date(date.getFullYear(), date.getMonth(), date.getDate(), 12, 0, 0);
+        const jd = getJulianDay(start);
+        const n = Math.floor(jd - 2451545.0 + 0.0008);
+        const jStar = n - (lon / 360.0);
+        const M = norm360(357.5291 + 0.98560028 * jStar);
+        const C = 1.9148 * sinD(M) + 0.0200 * sinD(2 * M) + 0.0003 * sinD(3 * M);
+        const lambda = norm360(M + C + 180 + 102.9372);
+        const jTransit = 2451545.0 + jStar + 0.0053 * sinD(M) - 0.0069 * sinD(2 * lambda);
+        const sinDec = sinD(lambda) * sinD(23.44);
+        const cosDec = Math.cos(Math.asin(sinDec));
+        const cosH = (sinD(-0.833) - sinD(lat) * sinDec) / (cosD(lat) * cosDec);
+        const H = Math.acos(Math.max(-1, Math.min(1, cosH))) * RAD;
+        const jRise = jTransit - (H / 360.0);
+        const jSet = jTransit + (H / 360.0);
+        return {
+            sunrise: new Date((jRise - 2440587.5) * 86400000),
+            sunset: new Date((jSet - 2440587.5) * 86400000)
+        };
+    }
+
+    function calcMoonRiseSet(date, lat, lon, sunrise) {
+        // Approximate Moonrise/Moonset from lunar age relative to Sun
+        const jd = getJulianDay(sunrise);
+        const p = getTropicalPlanets(jd);
+        const elongation = norm360(p.moonLon - p.sunLon);
+        const delayHours = (elongation / 360.0) * 24.84;
+        const moonrise = new Date(sunrise.getTime() + delayHours * 3600000);
+        const moonset = new Date(moonrise.getTime() + 12.2 * 3600000);
+        return { moonrise, moonset };
+    }
+
+    // ==================== CONSTANTS & GUJARATI DATA ====================
+    const RASHIS = ["મેષ", "વૃષભ", "મિથુન", "કર્ક", "સિંહ", "કન્યા", "તુલા", "વૃશ્ચિક", "ધનુ", "મકર", "કુંભ", "મીન"];
+    const RASHI_LORDS = ["મંગળ", "શુક્ર", "બુધ", "ચંદ્ર", "સૂર્ય", "બુધ", "શુક્ર", "મંગળ", "ગુરુ", "શનિ", "શનિ", "ગુરુ"];
+    const NAKSHATRAS = [
+        "અશ્વિની", "ભરણી", "કૃત્તિકા", "રોહિણી", "મૃગશીર્ષ", "આર્દ્રા",
+        "પુનર્વસુ", "પુષ્ય", "આશ્લેષા", "મઘા", "પૂર્વાફાલ્ગુની", "ઉત્તરાફાલ્ગુની",
+        "હસ્ત", "ચિત્રા", "સ્વાતિ", "વિશાખા", "અનુરાધા", "જ્યેષ્ઠા",
+        "મૂળ", "પૂર્વાષાઢા", "ઉત્તરાષાઢા", "શ્રવણ", "ધનિષ્ઠા", "શતભિષા",
+        "પૂર્વાભાદ્રપદ", "ઉત્તરાભાદ્રપદ", "રેવતી"
+    ];
+    const TITHIS = [
+        "સુદ એકમ (પ્રતિપદા)", "સુદ બીજ (દ્વિતીયા)", "સુદ ત્રીજ (તૃતીયા)", "સુદ ચોથ (ચતુર્થી)", "સુદ પાંચમ (પંચમી)",
+        "સુદ છઠ (ષષ્ઠી)", "સુદ સાતમ (સપ્તમી)", "સુદ આઠમ (અષ્ટમી)", "સુદ નોમ (નવમી)", "સુદ દશમ (દશમી)",
+        "સુદ અગિયારસ (એકાદશી)", "સુદ બારસ (દ્વાદશી)", "સુદ તેરસ (ત્રયોદશી)", "સુદ ચૌદશ (ચતુર્દશી)", "પૂનમ (પૂર્ણિમા)",
+        "વદ એકમ (પ્રતિપદા)", "વદ બીજ (દ્વિતીયા)", "વદ ત્રીજ (તૃતીયા)", "વદ ચોથ (ચતુર્થી)", "વદ પાંચમ (પંચમી)",
+        "વદ છઠ (ષષ્ઠી)", "વદ સાતમ (સપ્તમી)", "વદ આઠમ (અષ્ટમી)", "વદ નોમ (નવમી)", "વદ દશમ (દશમી)",
+        "વદ અગિયારસ (એકાદશી)", "વદ બારસ (દ્વાદશી)", "વદ તેરસ (ત્રયોદશી)", "વદ ચૌદશ (ચતુર્દશી)", "અમાસ (અમાવસ્યા)"
+    ];
+    const YOGAS = [
+        "વિષ્કુંભ", "પ્રીતિ", "આયુષ્માન", "સૌભાગ્ય", "શોભન", "અતિગંડ", "સુકર્મા", "ધૃતિ", "શૂળ",
+        "ગંડ", "વૃદ્ધિ", "ધ્રુવ", "વ્યાઘાત", "હર્ષણ", "વજ્ર", "સિદ્ધિ", "વ્યતીપાત", "વરીયાન",
+        "પરિઘ", "શિવ", "સિદ્ધ", "સાધ્ય", "શુભ", "શુક્લ", "બ્રહ્મ", "ઐન્દ્ર", "વૈધૃતિ"
+    ];
+    const KARANAS = ["બવ", "બાલવ", "કૌલવ", "તૈતિલ", "ગર", "વણિજ", "વિષ્ટિ (ભદ્રા)", "શકુનિ", "ચતુષ્પાદ", "નાગ", "કિંસ્તુઘ્ન"];
+    const GUJ_MONTHS = ["ચૈત્ર", "વૈશાખ", "જેઠ", "અષાઢ", "શ્રાવણ", "ભાદરવો", "આસો", "કારતક", "માગશર", "પોષ", "મહા", "ફાગણ"];
+    const ENG_MONTHS_GUJ = ["જાન્યુઆરી", "ફેબ્રુઆરી", "માર્ચ", "એપ્રિલ", "મે", "જૂન", "જુલાઈ", "ઓગસ્ટ", "સપ્ટેમ્બર", "ઓક્ટોબર", "નવેમ્બર", "ડિસેમ્બર"];
+    const DAYS_GUJ = ["રવિવાર", "સોમવાર", "મંગળવાર", "બુધવાર", "ગુરુવાર", "શુક્રવાર", "શનિવાર"];
+    const SAMVATSARAS = ["પ્રભવ", "વિભવ", "શુક્લ", "પ્રમોદ", "પ્રજાપતિ", "અંગિરા", "શ્રીમુખ", "ભાવ", "યુવા", "ધાતા", "ઈશ્વર", "બહુધાન્ય", "પ્રમાથી", "વિક્રમ", "વૃષ", "ચિત્રભાનુ", "સ્વભાનુ", "તારણ", "પાર્થિવ", "વ્યય", "સર્વજિત", "સર્વધારી", "વિરોધી", "વિકૃતિ", "ખર", "નંદન", "વિજય", "જય", "મન્મથ", "દુર્મુખ", "હેમલંબી", "વિલંબી", "વિકારી", "શાર્વરી", "પ્લવ", "શુભકૃત", "શોભકૃત", "ક્રોધી", "વિશ્વાવસુ", "પરાભવ", "પ્લવંગ", "કીલક", "સૌમ્ય", "સાધારણ", "વિરોધકૃત", "પરિધાવી", "પ્રમાદી", "આનંદ", "રાક્ષસ", "નલ", "પિંગલ", "કાલયુક્ત", "સિદ્ધાર્થી", "રૌદ્ર", "દુર્મતિ", "દુંદુભિ", "રુધિરોદ્ગારી", "રક્તાક્ષી", "ક્રોધન", "અક્ષય"];
+
+    const FESTIVALS_DB = [
+        { date: "2026-01-14", name: "મકરસંક્રાંતિ (ઉત્તરાયણ)", desc: "સૂર્યનો મકર રાશિમાં પ્રવેશ, દાન-પુણ્યનો પર્વ." },
+        { date: "2026-01-23", name: "વસંત પંચમી (સરસ્વતી પૂજન)", desc: "માઘ સુદ પાંચમ, વિદ્યા અને જ્ઞાનની દેવી સરસ્વતીનું પૂજન." },
+        { date: "2026-02-15", name: "મહાશિવરાત્રી", desc: "મહા વદ ચૌદશ, ભગવાન શિવની ઉપાસનાની મહારાત્રી." },
+        { date: "2026-03-03", name: "હોળી (હુતાશની)", desc: "ફાગણ પૂનમ, હોલિકા દહન." },
+        { date: "2026-03-04", name: "ધૂળેટી", desc: "રંગોત્સવ પર્વ." },
+        { date: "2026-03-19", name: "ચૈત્રી નવરાત્રી પ્રારંભ / ગુડી પડવો", desc: "ચૈત્ર સુદ એકમ, હિન્દુ નવવર્ષ (શક સંવત 1948) પ્રારંભ." },
+        { date: "2026-03-27", name: "રામ નવમી", desc: "ચૈત્ર સુદ નોમ, ભગવાન શ્રીરામ પ્રાગટ્ય દિવસ." },
+        { date: "2026-04-02", name: "હનુમાન જયંતી", desc: "ચૈત્ર પૂનમ, શ્રી હનુમાનજી જન્મોત્સવ." },
+        { date: "2026-04-19", name: "અક્ષય તૃતીયા (અખાત્રીજ)", desc: "વૈશાખ સુદ ત્રીજ, વણજોયું શુભ મુહૂર્ત." },
+        { date: "2026-07-16", name: "રથયાત્રા (અષાઢી બીજ)", desc: "અષાઢ સુદ બીજ, ભગવાન જગન્નાથજીની રથયાત્રા." },
+        { date: "2026-07-29", name: "ગુરુ પૂર્ણિમા", desc: "અષાઢ પૂનમ, વ્યાસ પૂજન અને ગુરુ વંદના." },
+        { date: "2026-08-28", name: "રક્ષાબંધન (બળેવ)", desc: "શ્રાવણ પૂનમ, ભાઈ-બહેનના સ્નેહનો પર્વ." },
+        { date: "2026-09-04", name: "શ્રીકૃષ્ણ જન્માષ્ટમી", desc: "શ્રાવણ વદ આઠમ, ભગવાન શ્રીકૃષ્ણ જન્મોત્સવ." },
+        { date: "2026-09-14", name: "ગણેશ ચતુર્થી", desc: "ભાદરવા સુદ ચોથ, શ્રી ગણેશ સ્થાપના." },
+        { date: "2026-09-25", name: "અનંત ચતુર્દશી", desc: "ગણેશ વિસર્જન." },
+        { date: "2026-09-26", name: "પિતૃ પક્ષ (શ્રાદ્ધ) પ્રારંભ", desc: "ભાદરવા વદ એકમથી અમાસ સુધી પિતૃ તર્પણ." },
+        { date: "2026-10-11", name: "શારદીય નવરાત્રી પ્રારંભ (ઘટસ્થાપન)", desc: "આસો સુદ એકમ, મા આદ્યશક્તિની આરાધના." },
+        { date: "2026-10-20", name: "વિજયાદશમી (દશેરા)", desc: "આસો સુદ દશમ, અસત્ય પર સત્યનો વિજય." },
+        { date: "2026-10-25", name: "શરદ પૂર્ણિમા", desc: "આસો પૂનમ, કોજાગરી પૂર્ણિમા." },
+        { date: "2026-11-06", name: "ધનતેરસ", desc: "આસો વદ તેરસ, ધન્વંતરિ પૂજન અને લક્ષ્મી પૂજન." },
+        { date: "2026-11-07", name: "કાળી ચૌદશ", desc: "આસો વદ ચૌદશ, હનુમાનજી અને મહાકાળી ઉપાસના." },
+        { date: "2026-11-08", name: "દિવાળી (લક્ષ્મી પૂજન)", desc: "આસો અમાસ, દીપોત્સવી મહાપર્વ." },
+        { date: "2026-11-10", name: "બેસતું વર્ષ (વિક્રમ સંવત 2083)", desc: "કારતક સુદ એકમ, ગુજરાતી નવું વર્ષ અને ગોવર્ધન પૂજા." },
+        { date: "2026-11-11", name: "ભાઈબીજ", desc: "કારતક સુદ બીજ, યમ દ્વિતીયા." },
+        { date: "2026-11-15", name: "લાભ પાંચમ", desc: "કારતક સુદ પાંચમ, શુભ મુહૂર્ત." },
+        { date: "2026-11-21", name: "દેવઉઠી એકાદશી (તુલસી વિવાહ)", desc: "કારતક સુદ અગિયારસ, ચાતુર્માસ સમાપ્તિ." },
+        { date: "2026-11-24", name: "દેવ દિવાળી", desc: "કારતક પૂનમ." },
+        { date: "2027-01-14", name: "મકરસંક્રાંતિ 2027", desc: "સૂર્યનો મકર રાશિમાં પ્રવેશ." },
+        { date: "2027-03-06", name: "મહાશિવરાત્રી 2027", desc: "મહા વદ ચૌદશ." },
+        { date: "2027-03-22", name: "હોળી 2027", desc: "ફાગણ પૂનમ." },
+        { date: "2027-04-15", name: "રામ નવમી 2027", desc: "ચૈત્ર સુદ નોમ." }
+    ];
+
+    // ==================== STATE ====================
+    let currentDate = new Date();
+    let anchorDate = new Date();
+    let calViewDate = new Date(currentDate.getFullYear(), currentDate.getMonth(), 1);
+    let lat = 22.37, lon = 71.98, cityName = "ધંધુકા";
+    let chakraMode = 'lagna';
+    let selectedPlanetKey = 'Sun';
+    let settings = JSON.parse(localStorage.getItem('kaalshodh_settings')) || { ayanamsa: 'lahiri', monthSystem: 'amavasyant' };
+    let astro = {};
+
+    function formatDeg(d) {
+        const deg = Math.floor(d % 30);
+        const min = Math.floor(((d % 30) - deg) * 60);
+        return `${deg}°${min.toString().padStart(2, '0')}'`;
+    }
+    function formatTime(dt) {
+        if (!dt || isNaN(dt.getTime())) return "--:--";
+        return dt.getHours().toString().padStart(2, '0') + ":" + dt.getMinutes().toString().padStart(2, '0');
+    }
+
+    function getAyanamsa(date) {
+        const centuries = ((getJulianDay(date) - 2451545.0) / 36525.0);
+        const lahiri = 23.853056 + (centuries * 1.39697);
+        if (settings.ayanamsa === 'raman') return lahiri - 1.44;
+        if (settings.ayanamsa === 'kp') return lahiri - 0.10;
+        return lahiri;
+    }
+
+    function computeAstro(date) {
+        const ayan = getAyanamsa(date);
+        const jd = getJulianDay(date);
+        const trop = getTropicalPlanets(jd);
+
+        const sunLon = norm360(trop.sunLon - ayan);
+        const moonLon = norm360(trop.moonLon - ayan);
+        const marsLon = norm360(trop.marsLon - ayan);
+        const mercLon = norm360(trop.mercLon - ayan);
+        const jupLon = norm360(trop.jupLon - ayan);
+        const venLon = norm360(trop.venLon - ayan);
+        const satLon = norm360(trop.satLon - ayan);
+        const rahuLon = norm360(trop.rahuTrop - ayan);
+        const ketuLon = norm360(rahuLon + 180);
+
+        // Local Sidereal Time & Lagna
+        const T = (jd - 2451545.0) / 36525.0;
+        const gmstDeg = norm360(280.46061837 + 360.98564736629 * (jd - 2451545.0) + 0.000387933 * T * T);
+        const lstRad = norm360(gmstDeg + lon) * DEG;
+        const eps = 23.4392911 * DEG;
+        const latRad = lat * DEG;
+        const ascTrop = atan2D(Math.cos(lstRad), -Math.sin(lstRad) * Math.cos(eps) - Math.tan(latRad) * Math.sin(eps));
+        const lagnaLon = norm360(ascTrop - ayan);
+        const lagnaRashi = Math.floor(lagnaLon / 30);
+
+        const planets = [
+            { key: 'Sun', name: 'સૂર્ય', short: 'સૂ', lon: sunLon, color: '#ff9800', rOff: 0.34 },
+            { key: 'Moon', name: 'ચંદ્ર', short: 'ચં', lon: moonLon, color: '#e0e0e0', rOff: 0.25 },
+            { key: 'Mars', name: 'મંગળ', short: 'મં', lon: marsLon, color: '#ff5252', rOff: 0.42 },
+            { key: 'Mercury', name: 'બુધ', short: 'બુ', lon: mercLon, color: '#4caf50', rOff: 0.30 },
+            { key: 'Jupiter', name: 'ગુરુ', short: 'ગુ', lon: jupLon, color: '#ffeb3b', rOff: 0.50 },
+            { key: 'Venus', name: 'શુક્ર', short: 'શુ', lon: venLon, color: '#f48fb1', rOff: 0.38 },
+            { key: 'Saturn', name: 'શનિ', short: 'શ', lon: satLon, color: '#64b5f6', rOff: 0.56 },
+            { key: 'Rahu', name: 'રાહુ', short: 'રા', lon: rahuLon, color: '#9e9e9e', rOff: 0.46 },
+            { key: 'Ketu', name: 'કેતુ', short: 'કે', lon: ketuLon, color: '#bcaaa4', rOff: 0.46 }
+        ];
+        planets.forEach(p => {
+            p.rashi = Math.floor(p.lon / 30);
+            p.house = ((p.rashi - lagnaRashi + 12) % 12) + 1;
+            p.nak = Math.floor(p.lon / (360 / 27));
+        });
+
+        const diff = norm360(moonLon - sunLon);
+        const tithiIdx = Math.floor(diff / 12);
+        const tithiEndMs = date.getTime() + ((12 - (diff % 12)) / 12.19) * 86400000;
+
+        const nakSpan = 360 / 27;
+        const nakIdx = Math.floor(moonLon / nakSpan);
+        const nakEndMs = date.getTime() + ((nakSpan - (moonLon % nakSpan)) / 13.176) * 86400000;
+
+        const yogaDeg = norm360(sunLon + moonLon);
+        const yogaIdx = Math.floor(yogaDeg / nakSpan);
+        const yogaEndMs = date.getTime() + ((nakSpan - (yogaDeg % nakSpan)) / 14.16) * 86400000;
+
+        const karanaNum = Math.floor(diff / 6);
+        let karanaName = (karanaNum === 0) ? KARANAS[10] : (karanaNum >= 57 ? KARANAS[karanaNum - 50] : KARANAS[(karanaNum - 1) % 7]);
+        const karanaEndMs = date.getTime() + ((6 - (diff % 6)) / 12.19) * 86400000;
+
+        const { sunrise, sunset } = calcSunRiseSet(date, lat, lon);
+        const nextSunrise = new Date(sunrise.getTime() + 86400000);
+        const { moonrise, moonset } = calcMoonRiseSet(date, lat, lon, sunrise);
+
+        const sunRashi = Math.floor(sunLon / 30);
+        let gujMonthIdx = (sunRashi + 1) % 12;
+        if (settings.monthSystem === 'purnimant' && tithiIdx >= 15) {
+            gujMonthIdx = (gujMonthIdx + 1) % 12;
+        }
+
+        const yr = date.getFullYear();
+        const vikramSamvat = (gujMonthIdx >= 7) ? yr + 57 : yr + 56;
+        const shakaSamvat = (date.getMonth() >= 2 && date.getDate() >= 20) || date.getMonth() > 2 ? yr - 78 : yr - 79;
+        const samvatsara = SAMVATSARAS[(shakaSamvat + 11) % 60];
+
+        const ayana = (trop.sunLon >= 270 || trop.sunLon < 90) ? "ઉત્તરાયણ" : "દક્ષિણાયન";
+        const rituList = ["વસંત ઋતુ", "ગ્રીષ્મ ઋતુ", "વર્ષા ઋતુ", "શરદ ઋતુ", "હેમંત ઋતુ", "શિશિર ઋતુ"];
+        const ritu = rituList[Math.floor(gujMonthIdx / 2)];
+
+        astro = {
+            date, sunLon, moonLon, lagnaLon, lagnaRashi, planets,
+            tithiIdx, tithiName: TITHIS[tithiIdx], tithiEnd: new Date(tithiEndMs),
+            nakIdx, nakName: NAKSHATRAS[nakIdx], nakEnd: new Date(nakEndMs),
+            yogaName: YOGAS[yogaIdx], yogaEnd: new Date(yogaEndMs),
+            karanaName, karanaEnd: new Date(karanaEndMs),
+            sunrise, sunset, nextSunrise, moonrise, moonset,
+            gujMonth: GUJ_MONTHS[gujMonthIdx],
+            vikramSamvat, shakaSamvat, samvatsara, ayana, ritu
+        };
+    }
+
+    // ==================== CHOGHADIYA, HORA & KAAL ====================
+    function getChoghadiyaData() {
+        const dayOrder = [
+            ["ઉદ્વેગ", "ચલ", "લાભ", "અમૃત", "કાળ", "શુભ", "રોગ", "ઉદ્વેગ"],
+            ["અમૃત", "કાળ", "શુભ", "રોગ", "ઉદ્વેગ", "ચલ", "લાભ", "અમૃત"],
+            ["રોગ", "ઉદ્વેગ", "ચલ", "લાભ", "અમૃત", "કાળ", "શુભ", "રોગ"],
+            ["લાભ", "અમૃત", "કાળ", "શુભ", "રોગ", "ઉદ્વેગ", "ચલ", "લાભ"],
+            ["શુભ", "રોગ", "ઉદ્વેગ", "ચલ", "લાભ", "અમૃત", "કાળ", "શુભ"],
+            ["ચલ", "લાભ", "અમૃત", "કાળ", "શુભ", "રોગ", "ઉદ્વેગ", "ચલ"],
+            ["કાળ", "શુભ", "રોગ", "ઉદ્વેગ", "ચલ", "લાભ", "અમૃત", "કાળ"]
+        ];
+        const nightOrder = [
+            ["શુભ", "અમૃત", "ચલ", "રોગ", "કાળ", "લાભ", "ઉદ્વેગ", "શુભ"],
+            ["ચલ", "રોગ", "કાળ", "લાભ", "ઉદ્વેગ", "શુભ", "અમૃત", "ચલ"],
+            ["કાળ", "લાભ", "ઉદ્વેગ", "શુભ", "અમૃત", "ચલ", "રોગ", "કાળ"],
+            ["ઉદ્વેગ", "શુભ", "અમૃત", "ચલ", "રોગ", "કાળ", "લાભ", "ઉદ્વેગ"],
+            ["અમૃત", "ચલ", "રોગ", "કાળ", "લાભ", "ઉદ્વેગ", "શુભ", "અમૃત"],
+            ["રોગ", "કાળ", "લાભ", "ઉદ્વેગ", "શુભ", "અમૃત", "ચલ", "રોગ"],
+            ["લાભ", "ઉદ્વેગ", "શુભ", "અમૃત", "ચલ", "રોગ", "કાળ", "લાભ"]
+        ];
+        const quality = { "અમૃત": "શ્રેષ્ઠ", "શુભ": "ઉત્તમ", "લાભ": "લાભદાયી", "ચલ": "સામાન્ય", "રોગ": "અશુભ", "કાળ": "અશુભ", "ઉદ્વેગ": "અશુભ" };
+
+        const dow = astro.date.getDay();
+        const dayLen = (astro.sunset - astro.sunrise) / 8;
+        const nightLen = (astro.nextSunrise - astro.sunset) / 8;
+
+        const dayList = [], nightList = [];
+        for (let i = 0; i < 8; i++) {
+            const s = new Date(astro.sunrise.getTime() + i * dayLen);
+            const e = new Date(s.getTime() + dayLen);
+            const name = dayOrder[dow][i];
+            dayList.push({ name, qual: quality[name], start: s, end: e });
+        }
+        for (let i = 0; i < 8; i++) {
+            const s = new Date(astro.sunset.getTime() + i * nightLen);
+            const e = new Date(s.getTime() + nightLen);
+            const name = nightOrder[dow][i];
+            nightList.push({ name, qual: quality[name], start: s, end: e });
+        }
+        return { dayList, nightList, dayLen, nightLen };
+    }
+
+    function getHoraList() {
+        const chaldean = ["સૂર્ય", "શુક્ર", "બુધ", "ચંદ્ર", "શનિ", "ગુરુ", "મંગળ"];
+        const dayStartIdx = [0, 3, 6, 2, 5, 1, 4];
+        let idx = dayStartIdx[astro.date.getDay()];
+        const dayStep = (astro.sunset - astro.sunrise) / 12;
+        const nightStep = (astro.nextSunrise - astro.sunset) / 12;
+        const list = [];
+        for (let i = 0; i < 24; i++) {
+            const isDay = i < 12;
+            const s = isDay ? new Date(astro.sunrise.getTime() + i * dayStep) : new Date(astro.sunset.getTime() + (i - 12) * nightStep);
+            const e = new Date(s.getTime() + (isDay ? dayStep : nightStep));
+            list.push({ planet: chaldean[idx % 7], start: s, end: e });
+            idx++;
+        }
+        return list;
+    }
+
+    // ==================== RENDER ALL VIEWS ====================
+    function updateAll() {
+        computeAstro(currentDate);
+
+        const d = currentDate.getDate();
+        const m = ENG_MONTHS_GUJ[currentDate.getMonth()];
+        const y = currentDate.getFullYear();
+        const dow = DAYS_GUJ[currentDate.getDay()];
+        document.getElementById('headerDateLabel').innerText = `${d} ${m} ${y}, ${dow}`;
+
+        const tzOff = currentDate.getTimezoneOffset() * 60000;
+        document.getElementById('globalDateTimeInput').value = (new Date(currentDate - tzOff)).toISOString().slice(0, 16);
+
+        renderPanchangTab();
+        renderChakraCanvas();
+        renderMuhuratTab();
+        renderKundaliSection();
+        renderCalendarTab();
+    }
+
+    function renderPanchangTab() {
+        document.getElementById('samvatHeader').innerText = `વિ.સં. ${astro.vikramSamvat} (${astro.samvatsara}) • શક ${astro.shakaSamvat}`;
+        document.getElementById('mainTithiTitle').innerText = `${astro.gujMonth} ${astro.tithiName}`;
+        document.getElementById('mainMonthVaar').innerText = `${DAYS_GUJ[astro.date.getDay()]} • ચંદ્ર રાશિ: ${RASHIS[Math.floor(astro.moonLon / 30)]}`;
+        document.getElementById('ayanaRituBadge').innerText = `${astro.ayana} • ${astro.ritu}`;
+
+        document.getElementById('sunriseVal').innerText = formatTime(astro.sunrise);
+        document.getElementById('sunsetVal').innerText = formatTime(astro.sunset);
+        document.getElementById('moonriseVal').innerText = formatTime(astro.moonrise);
+        document.getElementById('moonsetVal').innerText = formatTime(astro.moonset);
+
+        document.getElementById('panchangAngaTable').innerHTML = `
+            <tr><th>તિથિ</th><td><b>${astro.tithiName}</b></td><td style="color:var(--gold-primary);">${formatTime(astro.tithiEnd)} સુધી</td></tr>
+            <tr><th>નક્ષત્ર</th><td><b>${astro.nakName}</b></td><td style="color:var(--gold-primary);">${formatTime(astro.nakEnd)} સુધી</td></tr>
+            <tr><th>યોગ</th><td><b>${astro.yogaName}</b></td><td style="color:var(--gold-primary);">${formatTime(astro.yogaEnd)} સુધી</td></tr>
+            <tr><th>કરણ</th><td><b>${astro.karanaName}</b></td><td style="color:var(--gold-primary);">${formatTime(astro.karanaEnd)} સુધી</td></tr>
+        `;
+
+        const chog = getChoghadiyaData();
+        const allChog = [...chog.dayList, ...chog.nightList];
+        const curC = allChog.find(c => currentDate >= c.start && currentDate < c.end) || allChog[0];
+        const remMin = Math.max(0, Math.round((curC.end - currentDate) / 60000));
+        document.getElementById('nowChoghadiya').innerHTML = `<span class="${curC.qual === 'અશુભ' ? 'badge-bad' : 'badge-good'}">${curC.name} (${curC.qual})</span>`;
+        document.getElementById('nowChoghadiyaEnd').innerText = `${formatTime(curC.end)} સુધી (${remMin} મિનિટ બાકી)`;
+
+        const horas = getHoraList();
+        const curH = horas.find(h => currentDate >= h.start && currentDate < h.end) || horas[0];
+        document.getElementById('nowHora').innerText = `${curH.planet} હોરા`;
+        document.getElementById('nowHoraEnd').innerText = `${formatTime(curH.end)} સુધી`;
+
+        const pakshaStr = astro.tithiIdx < 15 ? "શુક્લપક્ષે" : "કૃષ્ણપક્ષે";
+        document.getElementById('sankalpText').innerText =
+            `ૐ વિષ્ણુર્વિષ્ણુર્વિષ્ણુઃ શ્રીમદ્ભગવતો મહાપુરુષસ્ય વિષ્ણોરાજ્ઞયા પ્રવર્તમાનસ્ય અદ્ય બ્રહ્મણોઽહ્નિ દ્વિતીયે પરાર્ધે શ્રીશ્વેતવારાહકલ્પે વૈવસ્વતમન્વન્તરે અષ્ટાવિંશતિતમે કલિયુગે કલિપ્રથમચરણે જમ્બૂદ્વીપે ભારતવર્ષે ભરતખંડે આર્યાવર્તાંતર્ગત ${cityName} ક્ષેત્રે, શ્રીમન્નૃપતિ વિક્રમાર્ક સમયાતીત સંવત્ ${astro.vikramSamvat}, ${astro.samvatsara} નામ સંવત્સરે, ${astro.ayana}ે, ${astro.ritu}ૌ, મહામાંગલ્યપ્રદ માસોત્તમ માસે ${astro.gujMonth} માસે, ${pakshaStr}, ${astro.tithiName} તિથૌ, ${DAYS_GUJ[astro.date.getDay()]} વાસરે, ${astro.nakName} નક્ષત્રે, ${astro.yogaName} યોગે, ${astro.karanaName} કરણે, ${RASHIS[Math.floor(astro.moonLon / 30)]} રાશિસ્થિતે ચન્દ્રે... મમ આત્મનઃ શ્રુતિ-સ્મૃતિ-પુરાણોક્ત ફલપ્રાપ્ત્યર્થં શ્રીપરમેશ્વર પ્રીત્યર્થં પૂજનં કરિષ્યે.`;
+    }
+
+    // Live Ghati-Pal-Vipal Clock Ticker
+    setInterval(() => {
+        if (!astro.sunrise) return;
+        const now = new Date();
+        let diffSec = (now - astro.sunrise) / 1000;
+        if (diffSec < 0) diffSec += 86400;
+        const totalVipal = diffSec / 0.4;
+        const ghati = Math.floor(totalVipal / 3600) % 60;
+        const pal = Math.floor((totalVipal % 3600) / 60);
+        const vipal = Math.floor(totalVipal % 60);
+        document.getElementById('liveGhatiClock').innerText =
+            `${ghati.toString().padStart(2, '0')}:${pal.toString().padStart(2, '0')}:${vipal.toString().padStart(2, '0')}`;
+
+        const pahars = ["પ્રથમ પ્રહર (સવાર)", "દ્વિતીય પ્રહર (બપોર)", "તૃતીય પ્રહર (સાંજ)", "ચતુર્થ પ્રહર (સંધ્યા)", "પાંચમો પ્રહર (રાત્રિ)", "છઠ્ઠો પ્રહર (મધ્યરાત્રિ)", "સાતમો પ્રહર (ઉત્તરરાત્રિ)", "આઠમો પ્રહર (બ્રહ્મવેલા)"];
+        document.getElementById('paharLabel').innerText = pahars[Math.floor(ghati / 7.5) % 8];
+    }, 400);
+
+    // ==================== CHAKRA CANVAS ====================
+    function renderChakraCanvas() {
+        const canvas = document.getElementById('chakraCanvas');
+        const ctx = canvas.getContext('2d');
+        const w = canvas.width, h = canvas.height, cx = w / 2, cy = h / 2;
+        const R_out = w * 0.47, R_nak = w * 0.41, R_rashi = w * 0.32;
+
+        ctx.clearRect(0, 0, w, h);
+        ctx.beginPath(); ctx.arc(cx, cy, R_out, 0, Math.PI * 2);
+        ctx.fillStyle = '#171208'; ctx.fill();
+        ctx.lineWidth = 3; ctx.strokeStyle = '#d4af37'; ctx.stroke();
+
+        const baseLon = (chakraMode === 'lagna') ? astro.lagnaLon : 0;
+        const toAngle = (deg) => (-Math.PI / 2) - (norm360(deg - baseLon) * DEG);
+
+        const nSpan = 360 / 27;
+        for (let i = 0; i < 27; i++) {
+            const a1 = toAngle(i * nSpan), aMid = toAngle(i * nSpan + nSpan / 2);
+            ctx.beginPath();
+            ctx.moveTo(cx + R_nak * Math.cos(a1), cy + R_nak * Math.sin(a1));
+            ctx.lineTo(cx + R_out * Math.cos(a1), cy + R_out * Math.sin(a1));
+            ctx.strokeStyle = 'rgba(212, 175, 55, 0.3)'; ctx.stroke();
+
+            ctx.save();
+            const tr = (R_nak + R_out) / 2;
+            ctx.translate(cx + tr * Math.cos(aMid), cy + tr * Math.sin(aMid));
+            ctx.rotate(aMid + Math.PI / 2);
+            ctx.fillStyle = '#ab9a7a'; ctx.font = '12px sans-serif'; ctx.textAlign = 'center';
+            ctx.fillText(NAKSHATRAS[i], 0, 4);
+            ctx.restore();
+        }
+        ctx.beginPath(); ctx.arc(cx, cy, R_nak, 0, Math.PI * 2); ctx.strokeStyle = '#d4af37'; ctx.stroke();
+
+        for (let i = 0; i < 12; i++) {
+            const a1 = toAngle(i * 30), aMid = toAngle(i * 30 + 15);
+            ctx.beginPath();
+            ctx.moveTo(cx, cy);
+            ctx.lineTo(cx + R_nak * Math.cos(a1), cy + R_nak * Math.sin(a1));
+            ctx.strokeStyle = 'rgba(212, 175, 55, 0.4)'; ctx.stroke();
+
+            ctx.save();
+            const tr = (R_rashi + R_nak) / 2;
+            ctx.translate(cx + tr * Math.cos(aMid), cy + tr * Math.sin(aMid));
+            ctx.rotate(aMid + Math.PI / 2);
+            ctx.fillStyle = (i === astro.lagnaRashi) ? '#ffeb3b' : '#d4af37';
+            ctx.font = 'bold 18px sans-serif'; ctx.textAlign = 'center';
+            ctx.fillText(RASHIS[i], 0, 6);
+            ctx.restore();
+        }
+        ctx.beginPath(); ctx.arc(cx, cy, R_rashi, 0, Math.PI * 2); ctx.strokeStyle = 'rgba(212, 175, 55, 0.5)'; ctx.stroke();
+
+        const lAng = toAngle(astro.lagnaLon);
+        ctx.save(); ctx.setLineDash([6, 6]);
+        ctx.beginPath(); ctx.moveTo(cx, cy);
+        ctx.lineTo(cx + R_out * Math.cos(lAng), cy + R_out * Math.sin(lAng));
+        ctx.strokeStyle = '#ffeb3b'; ctx.lineWidth = 2.5; ctx.stroke();
+        ctx.restore();
+
+        astro.planets.forEach(p => {
+            const ang = toAngle(p.lon);
+            const dist = R_rashi * (p.rOff / 0.62);
+            const px = cx + dist * Math.cos(ang), py = cy + dist * Math.sin(ang);
+
+            ctx.beginPath(); ctx.moveTo(cx, cy); ctx.lineTo(px, py);
+            ctx.strokeStyle = p.key === selectedPlanetKey ? p.color : 'rgba(255,255,255,0.12)';
+            ctx.stroke();
+
+            ctx.beginPath(); ctx.arc(px, py, 7, 0, Math.PI * 2);
+            ctx.fillStyle = p.color; ctx.fill();
+
+            ctx.fillStyle = '#fff'; ctx.font = 'bold 14px sans-serif';
+            ctx.fillText(p.name, px + 10, py + 4);
+            p.sx = px; p.sy = py;
+        });
+
+        const sel = astro.planets.find(p => p.key === selectedPlanetKey) || astro.planets[0];
+        document.getElementById('chakraPlanetBanner').innerText =
+            `લગ્ન: ${RASHIS[astro.lagnaRashi]} • ${sel.name}: ${formatDeg(sel.lon)} ${RASHIS[sel.rashi]} (${NAKSHATRAS[sel.nak]})`;
+    }
+
+    document.getElementById('chakraCanvas').addEventListener('click', (e) => {
+        const rect = e.target.getBoundingClientRect();
+        const sx = (e.clientX - rect.left) * (700 / rect.width);
+        const sy = (e.clientY - rect.top) * (700 / rect.height);
+        astro.planets.forEach(p => {
+            if (Math.hypot(sx - p.sx, sy - p.sy) < 40) {
+                selectedPlanetKey = p.key;
+                renderChakraCanvas();
+            }
+        });
+    });
+
+    // ==================== MUHURAT TAB ====================
+    function renderMuhuratTab() {
+        const { dayList, nightList, dayLen, nightLen } = getChoghadiyaData();
+        document.getElementById('dayDurationLabel').innerText = `દિનમાન: ${Math.round(dayLen * 8 / 60000)} મિનિટ`;
+        document.getElementById('nightDurationLabel').innerText = `રાત્રિમાન: ${Math.round(nightLen * 8 / 60000)} મિનિટ`;
+
+        const renderRows = (list) => list.map(c => {
+            const active = currentDate >= c.start && currentDate < c.end ? 'class="row-active"' : '';
+            const cls = c.qual === 'અશુભ' ? 'badge-bad' : (c.qual === 'સામાન્ય' ? 'badge-neutral' : 'badge-good');
+            return `<tr ${active}><td><b>${c.name}</b></td><td class="${cls}">${c.qual}</td><td>${formatTime(c.start)} - ${formatTime(c.end)}</td></tr>`;
+        }).join('');
+
+        document.getElementById('dayChoghadiyaTable').innerHTML = renderRows(dayList);
+        document.getElementById('nightChoghadiyaTable').innerHTML = renderRows(nightList);
+
+        const dow = astro.date.getDay();
+        const rahuSeg = [7, 1, 6, 4, 5, 3, 2][dow];
+        const yamaSeg = [4, 3, 2, 1, 0, 6, 5][dow];
+        const guliSeg = [6, 5, 4, 3, 2, 1, 0][dow];
+        const segRange = (idx) => {
+            const s = new Date(astro.sunrise.getTime() + idx * dayLen);
+            const e = new Date(s.getTime() + dayLen);
+            return `${formatTime(s)} - ${formatTime(e)}`;
+        };
+
+        const midDay = new Date((astro.sunrise.getTime() + astro.sunset.getTime()) / 2);
+        const abhijitS = new Date(midDay.getTime() - 24 * 60000);
+        const abhijitE = new Date(midDay.getTime() + 24 * 60000);
+        const brahmaS = new Date(astro.sunrise.getTime() - 96 * 60000);
+        const brahmaE = new Date(astro.sunrise.getTime() - 48 * 60000);
+
+        document.getElementById('kaalTable').innerHTML = `
+            <tr><td>🌅 બ્રહ્મ મુહૂર્ત (શ્રેષ્ઠ)</td><td class="badge-good">${formatTime(brahmaS)} - ${formatTime(brahmaE)}</td></tr>
+            <tr><td>☀️ અભિજીત મુહૂર્ત (શુભ)</td><td class="badge-good">${dow === 3 ? 'બુધવારે વર્જ્ય' : formatTime(abhijitS) + ' - ' + formatTime(abhijitE)}</td></tr>
+            <tr><td>⛔ રાહુકાળ (અશુભ)</td><td class="badge-bad">${segRange(rahuSeg)}</td></tr>
+            <tr><td>⚠️ યમગંડ કાળ</td><td class="badge-bad">${segRange(yamaSeg)}</td></tr>
+            <tr><td>🔸 ગુલિક કાળ</td><td class="badge-neutral">${segRange(guliSeg)}</td></tr>
+        `;
+
+        const moonRashi = Math.floor(astro.moonLon / 30);
+        const isPanchak = (moonRashi === 10 || moonRashi === 11);
+        const isGuruPushya = (dow === 4 && astro.nakIdx === 7);
+        const isRaviPushya = (dow === 0 && astro.nakIdx === 7);
+        document.getElementById('specialYogasBox').innerHTML = `
+            <div>• <b>પંચક સ્થિતિ:</b> ${isPanchak ? '<span class="badge-bad">પંચક ચાલુ છે (કુંભ/મીન ચંદ્ર)</span>' : '<span class="badge-good">પંચક નથી</span>'}</div>
+            <div>• <b>ગુરુપુષ્ય / રવિપુષ્ય:</b> ${isGuruPushya ? 'ગુરુપુષ્ય અમૃત યોગ!' : (isRaviPushya ? 'રવિપુષ્ય યોગ!' : 'સામાન્ય દિવસ')}</div>
+        `;
+
+        document.getElementById('horaTable').innerHTML = getHoraList().map(h => {
+            const active = currentDate >= h.start && currentDate < h.end ? 'class="row-active"' : '';
+            return `<tr ${active}><td><b>${h.planet}</b></td><td>${formatTime(h.start)} - ${formatTime(h.end)}</td></tr>`;
+        }).join('');
+    }
+
+    // ==================== KUNDALI, DASHA & MILAN ====================
+    function renderKundaliSection() {
+        const lagnaName = RASHIS[astro.lagnaRashi];
+        const moonRashi = Math.floor(astro.moonLon / 30);
+        document.getElementById('kundaliSummaryMeta').innerHTML = `
+            <div><b>લગ્ન:</b> ${lagnaName} (${formatDeg(astro.lagnaLon)})</div>
+            <div><b>ચંદ્ર રાશિ:</b> ${RASHIS[moonRashi]}</div>
+            <div><b>નક્ષત્ર:</b> ${astro.nakName}</div>
+            <div><b>સ્થળ:</b> ${cityName}</div>
+        `;
+
+        const style = document.getElementById('chartStyleSelect').value;
+        document.getElementById('kundaliChartBox').innerHTML = (style === 'north') ? buildNorthSVG() : buildSouthSVG();
+
+        const mars = astro.planets.find(p => p.key === 'Mars');
+        const saturn = astro.planets.find(p => p.key === 'Saturn');
+        const isManglik = [1, 4, 7, 8, 12].includes(mars.house);
+        const satDiff = (saturn.rashi - moonRashi + 12) % 12;
+        const sadeSati = (satDiff === 11 || satDiff === 0 || satDiff === 1) ? "સાડાસાતી ચાલુ છે" : "સાડાસાતી નથી";
+
+        document.getElementById('doshaBox').innerHTML = `
+            <div>• <b>મંગળ દોષ:</b> ${isManglik ? `<span class="badge-bad">હા (${mars.house}મા ભાવમાં મંગળ)</span>` : '<span class="badge-good">મંગળ દોષ નથી</span>'}</div>
+            <div>• <b>શનિ સાડાસાતી:</b> ${sadeSati} (ગોચર શનિ: ${RASHIS[saturn.rashi]})</div>
+        `;
+
+        const tbody = document.querySelector('#kundaliPlanetTable tbody');
+        tbody.innerHTML = `<tr style="color:var(--gold-light); font-weight:bold;">
+            <td>લગ્ન</td><td>1</td><td>${lagnaName}</td><td>${formatDeg(astro.lagnaLon)}</td><td>${NAKSHATRAS[Math.floor(astro.lagnaLon / (360 / 27))]}</td>
+        </tr>` + astro.planets.map(p => `<tr>
+            <td>${p.name}</td><td>${p.house}</td><td>${RASHIS[p.rashi]}</td><td>${formatDeg(p.lon)}</td><td>${NAKSHATRAS[p.nak]}</td>
+        </tr>`).join('');
+
+        renderVimshottariDasha();
+    }
+
+    function buildNorthSVG() {
+        const hp = Array.from({ length: 13 }, () => []);
+        astro.planets.forEach(p => hp[p.house].push(p.short));
+        const coords = {
+            1:{rx:150,ry:125,px:150,py:75}, 2:{rx:75,ry:55,px:75,py:28}, 3:{rx:45,ry:75,px:25,py:75},
+            4:{rx:120,ry:150,px:75,py:150}, 5:{rx:45,ry:225,px:25,py:225}, 6:{rx:75,ry:245,px:75,py:275},
+            7:{rx:150,ry:175,px:150,py:225}, 8:{rx:225,ry:245,px:225,py:275}, 9:{rx:255,ry:225,px:275,py:225},
+            10:{rx:180,ry:150,px:225,py:150}, 11:{rx:255,ry:75,px:275,py:75}, 12:{rx:225,ry:55,px:225,py:28}
+        };
+        let svg = `<svg viewBox="0 0 300 300" width="100%" style="background:#140f08; border:2px solid #d4af37;">
+            <line x1="0" y1="0" x2="300" y2="300" stroke="#d4af37" stroke-width="1.5"/>
+            <line x1="300" y1="0" x2="0" y2="300" stroke="#d4af37" stroke-width="1.5"/>
+            <polygon points="150,0 300,150 150,300 0,150" fill="none" stroke="#d4af37" stroke-width="1.5"/>`;
+        for (let h = 1; h <= 12; h++) {
+            const rNum = ((astro.lagnaRashi + h - 1) % 12) + 1;
+            const c = coords[h];
+            svg += `<text x="${c.rx}" y="${c.ry}" fill="#ab9a7a" font-size="11" text-anchor="middle">${rNum}</text>`;
+            svg += `<text x="${c.px}" y="${c.py}" fill="#f5d36c" font-size="12" font-weight="bold" text-anchor="middle">${hp[h].join(' ')}</text>`;
+        }
+        return svg + `</svg>`;
+    }
+
+    function buildSouthSVG() {
+        const rashiPos = [
+            {x:75,y:0}, {x:150,y:0}, {x:225,y:0}, {x:225,y:75},
+            {x:225,y:150}, {x:225,y:225}, {x:150,y:225}, {x:75,y:225},
+            {x:0,y:225}, {x:0,y:150}, {x:0,y:75}, {x:0,y:0}
+        ];
+        const rp = Array.from({ length: 12 }, () => []);
+        rp[astro.lagnaRashi].push("લગ્ન");
+        astro.planets.forEach(p => rp[p.rashi].push(p.short));
+
+        let svg = `<svg viewBox="0 0 300 300" width="100%" style="background:#140f08; border:2px solid #d4af37;">`;
+        for (let r = 0; r < 12; r++) {
+            const pos = rashiPos[r];
+            svg += `<rect x="${pos.x}" y="${pos.y}" width="75" height="75" fill="none" stroke="#d4af37" stroke-width="1.2"/>`;
+            svg += `<text x="${pos.x + 6}" y="${pos.y + 14}" fill="#ab9a7a" font-size="9">${RASHIS[r]}</text>`;
+            svg += `<text x="${pos.x + 37}" y="${pos.y + 42}" fill="#f5d36c" font-size="11" font-weight="bold" text-anchor="middle">${rp[r].join(' ')}</text>`;
+        }
+        svg += `<text x="150" y="155" fill="#d4af37" font-size="13" font-weight="bold" text-anchor="middle">રાશિ કુંડળી</text></svg>`;
+        return svg;
+    }
+
+    function renderVimshottariDasha() {
+        const lords = ["કેતુ", "શુક્ર", "સૂર્ય", "ચંદ્ર", "મંગળ", "રાહુ", "ગુરુ", "શનિ", "બુધ"];
+        const years = [7, 20, 6, 10, 7, 18, 16, 19, 17];
+        const nakSpan = 360 / 27;
+        const startIdx = astro.nakIdx % 9;
+        const elapsedFrac = (astro.moonLon % nakSpan) / nakSpan;
+
+        let curTime = new Date(astro.date.getTime());
+        let html = `<table><tr><th>મહાદશા ગ્રહ</th><th>સમયગાળો</th><th>સમાપ્તિ તારીખ</th></tr>`;
+        for (let i = 0; i < 9; i++) {
+            const idx = (startIdx + i) % 9;
+            const durYears = (i === 0) ? years[idx] * (1 - elapsedFrac) : years[idx];
+            const endDate = new Date(curTime.getTime() + durYears * 365.2425 * 86400000);
+            html += `<tr><td><b>${lords[idx]}</b></td><td>${durYears.toFixed(1)} વર્ષ</td><td>${endDate.getDate()}/${endDate.getMonth() + 1}/${endDate.getFullYear()}</td></tr>`;
+            curTime = endDate;
+        }
+        document.getElementById('dashaList').innerHTML = html + `</table>`;
+    }
+
+    function calculateGunaMilan() {
+        const bDate = new Date(document.getElementById('boyDob').value);
+        const gDate = new Date(document.getElementById('girlDob').value);
+        if (isNaN(bDate) || isNaN(gDate)) return;
+
+        const getMoon = (dt) => norm360(getTropicalPlanets(getJulianDay(dt)).moonLon - getAyanamsa(dt));
+        const bMoon = getMoon(bDate), gMoon = getMoon(gDate);
+        const bNak = Math.floor(bMoon / (360 / 27)), gNak = Math.floor(gMoon / (360 / 27));
+        const bRashi = Math.floor(bMoon / 30), gRashi = Math.floor(gMoon / 30);
+
+        const varna = 1;
+        const vashya = (bRashi === gRashi) ? 2 : 1;
+        const taraDiff = ((gNak - bNak + 27) % 27) % 9;
+        const tara = [0, 3, 3, 0, 3, 0, 3, 0, 3][taraDiff];
+        const yoni = (bNak % 14 === gNak % 14) ? 4 : 2;
+        const maitri = (RASHI_LORDS[bRashi] === RASHI_LORDS[gRashi]) ? 5 : 3;
+        const gana = (bNak % 3 === gNak % 3) ? 6 : 3;
+        const rashiDiff = (gRashi - bRashi + 12) % 12;
+        const bhakoot = [1, 5, 7, 11].includes(rashiDiff) ? 0 : 7;
+        const nadi = (bNak % 3 !== gNak % 3) ? 8 : 0;
+
+        const total = varna + vashya + tara + yoni + maitri + gana + bhakoot + nadi;
+        const verdict = total >= 18 ? `<span class="badge-good">ઉત્તમ મેચ (${total}/36 ગુણ)</span>` : `<span class="badge-bad">ઓછા ગુણ (${total}/36 ગુણ)</span>`;
+
+        document.getElementById('milanResultBox').innerHTML = `
+            <div class="stat-box" style="text-align:center; margin-bottom:8px;">
+                <div style="font-size:1.1rem;">${verdict}</div>
+                <div style="font-size:0.74rem; color:var(--text-muted);">વર: ${RASHIS[bRashi]} (${NAKSHATRAS[bNak]}) • કન્યા: ${RASHIS[gRashi]} (${NAKSHATRAS[gNak]})</div>
+            </div>
+            <table>
+                <tr><td>વર્ણ (1)</td><td>${varna}</td><td>ગણ (6)</td><td>${gana}</td></tr>
+                <tr><td>વશ્ય (2)</td><td>${vashya}</td><td>ભકૂટ (7)</td><td>${bhakoot}</td></tr>
+                <tr><td>તારા (3)</td><td>${tara}</td><td>નાડી (8)</td><td>${nadi}</td></tr>
+                <tr><td>યોનિ (4)</td><td>${yoni}</td><td>ગ્રહ મૈત્રી (5)</td><td>${maitri}</td></tr>
+            </table>
+        `;
+    }
+
+    function saveCurrentKundali() {
+        const name = prompt("કુંડળીનું નામ લખો:");
+        if (!name) return;
+        const list = JSON.parse(localStorage.getItem('kaalshodh_kundalis')) || [];
+        list.push({ name, date: currentDate.toISOString(), city: cityName, lat, lon });
+        localStorage.setItem('kaalshodh_kundalis', JSON.stringify(list));
+        renderSavedKundalis();
+        alert("કુંડળી સેવ થઈ ગઈ!");
+    }
+
+    function renderSavedKundalis() {
+        const list = JSON.parse(localStorage.getItem('kaalshodh_kundalis')) || [];
+        const box = document.getElementById('savedKundaliList');
+        if (!list.length) { box.innerHTML = "હજુ સુધી કોઈ કુંડળી સેવ કરી નથી."; return; }
+        box.innerHTML = list.map((item, idx) => `
+            <div class="stat-box" style="display:flex; justify-content:space-between; align-items:center; margin-bottom:6px;">
+                <div onclick="loadSavedKundali(${idx})" style="cursor:pointer;">
+                    <b>${item.name}</b><br>
+                    <span style="font-size:0.7rem; color:var(--text-muted);">${new Date(item.date).toLocaleString()} • ${item.city}</span>
+                </div>
+                <button class="mini-btn" onclick="deleteSavedKundali(${idx})">🗑️</button>
+            </div>
+        `).join('');
+    }
+
+    function loadSavedKundali(idx) {
+        const list = JSON.parse(localStorage.getItem('kaalshodh_kundalis')) || [];
+        const item = list[idx];
+        currentDate = new Date(item.date);
+        anchorDate = new Date(currentDate);
+        lat = item.lat; lon = item.lon; cityName = item.city;
+        showKundaliSub('chart');
+        updateAll();
+    }
+
+    function deleteSavedKundali(idx) {
+        const list = JSON.parse(localStorage.getItem('kaalshodh_kundalis')) || [];
+        list.splice(idx, 1);
+        localStorage.setItem('kaalshodh_kundalis', JSON.stringify(list));
+        renderSavedKundalis();
+    }
+
+    // ==================== CALENDAR & MY TITHI ====================
+    function renderCalendarTab() {
+        const y = calViewDate.getFullYear(), m = calViewDate.getMonth();
+        document.getElementById('calMonthTitle').innerText = `${ENG_MONTHS_GUJ[m]} ${y}`;
+
+        const firstDay = new Date(y, m, 1).getDay();
+        const daysInMonth = new Date(y, m + 1, 0).getDate();
+
+        let html = ["રવિ", "સોમ", "મંગળ", "બુધ", "ગુરુ", "શુક્ર", "શનિ"].map(d => `<div class="cal-head">${d}</div>`).join('');
+        for (let i = 0; i < firstDay; i++) html += `<div></div>`;
+
+        const monthVrats = [];
+        for (let d = 1; d <= daysInMonth; d++) {
+            const dt = new Date(y, m, d, 6, 30);
+            const ayan = getAyanamsa(dt);
+            const trop = getTropicalPlanets(getJulianDay(dt));
+            const tIdx = Math.floor(norm360((trop.moonLon - ayan) - (trop.sunLon - ayan)) / 12);
+            const shortTithi = TITHIS[tIdx].split(' ')[1];
+
+            const iso = `${y}-${(m + 1).toString().padStart(2, '0')}-${d.toString().padStart(2, '0')}`;
+            const fest = FESTIVALS_DB.find(f => f.date === iso);
+            const isToday = (d === currentDate.getDate() && m === currentDate.getMonth() && y === currentDate.getFullYear());
+
+            if (fest) monthVrats.push(`• <b>${d} ${ENG_MONTHS_GUJ[m]}:</b> ${fest.name}`);
+            if (tIdx === 10 || tIdx === 25) monthVrats.push(`• <b>${d} ${ENG_MONTHS_GUJ[m]}:</b> એકાદશી વ્રત`);
+            if (tIdx === 14) monthVrats.push(`• <b>${d} ${ENG_MONTHS_GUJ[m]}:</b> પૂર્ણિમા`);
+            if (tIdx === 29) monthVrats.push(`• <b>${d} ${ENG_MONTHS_GUJ[m]}:</b> અમાવસ્યા`);
+
+            html += `<div class="cal-day ${isToday ? 'today' : ''}" onclick="selectCalDay(${y},${m},${d})">
+                <div class="g-date">${d}</div>
+                ${fest ? '<div class="fest-dot"></div>' : ''}
+                <div class="h-tithi">${shortTithi}</div>
+            </div>`;
+        }
+        document.getElementById('calendarGrid').innerHTML = html;
+        document.getElementById('monthVratSummary').innerHTML = `<b>આ મહિનાના વ્રત-તહેવાર:</b><br>` + (monthVrats.join('<br>') || "સામાન્ય માસ");
+
+        document.getElementById('festivalListBox').innerHTML = FESTIVALS_DB.map(f => `
+            <div class="stat-box" style="margin-bottom:6px;">
+                <div style="display:flex; justify-content:space-between;">
+                    <b style="color:var(--gold-light);">${f.name}</b>
+                    <span style="color:var(--gold-primary); font-size:0.75rem;">${f.date}</span>
+                </div>
+                <div style="font-size:0.73rem; color:var(--text-muted); margin-top:2px;">${f.desc}</div>
+            </div>
+        `).join('');
+    }
+
+    function selectCalDay(y, m, d) {
+        currentDate = new Date(y, m, d, currentDate.getHours(), currentDate.getMinutes());
+        anchorDate = new Date(currentDate);
+        updateAll();
+    }
+
+    function shiftMonth(delta) {
+        calViewDate = new Date(calViewDate.getFullYear(), calViewDate.getMonth() + delta, 1);
+        renderCalendarTab();
+    }
+
+    function initMyTithiForm() {
+        document.getElementById('myTithiMonth').innerHTML = GUJ_MONTHS.map(m => `<option value="${m}">${m}</option>`).join('');
+        document.getElementById('myTithiVal').innerHTML = TITHIS.map(t => `<option value="${t}">${t}</option>`).join('');
+        renderMyTithiList();
+    }
+
+    function addMyTithi() {
+        const title = document.getElementById('myTithiTitle').value.trim();
+        if (!title) return;
+        const month = document.getElementById('myTithiMonth').value;
+        const tithi = document.getElementById('myTithiVal').value;
+        const list = JSON.parse(localStorage.getItem('kaalshodh_mytithi')) || [];
+        list.push({ title, month, tithi });
+        localStorage.setItem('kaalshodh_mytithi', JSON.stringify(list));
+        document.getElementById('myTithiTitle').value = '';
+        renderMyTithiList();
+    }
+
+    function renderMyTithiList() {
+        const list = JSON.parse(localStorage.getItem('kaalshodh_mytithi')) || [];
+        document.getElementById('myTithiList').innerHTML = list.length ? list.map((item, i) => `
+            <div class="stat-box" style="display:flex; justify-content:space-between; align-items:center; margin-bottom:6px;">
+                <div><b>${item.title}</b><br><span style="color:var(--gold-primary); font-size:0.74rem;">${item.month} ${item.tithi}</span></div>
+                <button class="mini-btn" onclick="deleteMyTithi(${i})">✕</button>
+            </div>
+        `).join('') : "કોઈ વ્યક્તિગત તિથિ ઉમેરેલ નથી.";
+    }
+
+    function deleteMyTithi(i) {
+        const list = JSON.parse(localStorage.getItem('kaalshodh_mytithi')) || [];
+        list.splice(i, 1);
+        localStorage.setItem('kaalshodh_mytithi', JSON.stringify(list));
+        renderMyTithiList();
+    }
+
+    // ==================== NAVIGATION & ENHANCED COMPASS ====================
+    function switchTab(tab) {
+        document.querySelectorAll('.view-section').forEach(el => el.classList.remove('active'));
+        document.querySelectorAll('.nav-item').forEach(el => el.classList.remove('active'));
+        document.getElementById('view-' + tab).classList.add('active');
+        document.getElementById('nav-' + tab).classList.add('active');
+        if (tab === 'chakra') renderChakraCanvas();
+        if (tab === 'kundali') renderSavedKundalis();
+    }
+
+    function showMuhuratSub(sub) {
+        ['choghadiya', 'kaal', 'hora'].forEach(s => {
+            document.getElementById('sub-' + s).style.display = (s === sub) ? 'block' : 'none';
+            document.getElementById('mTab' + s.charAt(0).toUpperCase() + s.slice(1)).classList.toggle('active', s === sub);
+        });
+    }
+
+    function showKundaliSub(sub) {
+        ['chart', 'dasha', 'milan', 'saved'].forEach(s => {
+            document.getElementById('ksub-' + s).style.display = (s === sub) ? 'block' : 'none';
+            document.getElementById('kTab' + s.charAt(0).toUpperCase() + s.slice(1)).classList.toggle('active', s === sub);
+        });
+    }
+
+    function showCalSub(sub) {
+        ['month', 'fest', 'mytithi'].forEach(s => {
+            document.getElementById('csub-' + s).style.display = (s === sub) ? 'block' : 'none';
+        });
+        document.getElementById('cTabMonth').classList.toggle('active', sub === 'month');
+        document.getElementById('cTabFest').classList.toggle('active', sub === 'fest');
+        document.getElementById('cTabMyTithi').classList.toggle('active', sub === 'mytithi');
+    }
+
+    function setChakraMode(mode) {
+        chakraMode = mode;
+        document.getElementById('tabLagnaTop').classList.toggle('active', mode === 'lagna');
+        document.getElementById('tabRashiTop').classList.toggle('active', mode === 'rashi');
+        renderChakraCanvas();
+    }
+
+    function onScrub(val) {
+        const step = parseInt(document.getElementById('sliderStepUnit').value);
+        currentDate = new Date(anchorDate.getTime() + val * step * 60000);
+        updateAll();
+    }
+
+    function shiftDays(days) {
+        currentDate = new Date(currentDate.getTime() + days * 86400000);
+        anchorDate = new Date(currentDate);
+        calViewDate = new Date(currentDate.getFullYear(), currentDate.getMonth(), 1);
+        updateAll();
+    }
+
+    function setExactDateTime(val) {
+        if (!val) return;
+        currentDate = new Date(val);
+        anchorDate = new Date(currentDate);
+        calViewDate = new Date(currentDate.getFullYear(), currentDate.getMonth(), 1);
+        updateAll();
+    }
+
+    function resetToNow() {
+        currentDate = new Date();
+        anchorDate = new Date();
+        calViewDate = new Date(currentDate.getFullYear(), currentDate.getMonth(), 1);
+        document.getElementById('timeScrubber').value = 0;
+        updateAll();
+    }
+
+    function changeCity(val) {
+        if (val === 'gps') {
+            navigator.geolocation?.getCurrentPosition(pos => {
+                lat = pos.coords.latitude; lon = pos.coords.longitude; cityName = "મારું GPS";
+                updateAll();
+            });
+        } else {
+            const p = val.split(',');
+            lat = parseFloat(p[0]); lon = parseFloat(p[1]); cityName = p[2];
+            updateAll();
+        }
+    }
+
+    function copySankalp() {
+        navigator.clipboard?.writeText(document.getElementById('sankalpText').innerText);
+        alert("સંકલ્પ મંત્ર કોપી થઈ ગયો!");
+    }
+
+    // Android Chrome & iOS Compass Support
+    let sensorGotData = false;
+    function updateCompassUI(heading) {
+        const deg = Math.round(norm360(heading));
+        const dirs = ["ઉત્તર", "ઈશાન", "પૂર્વ", "અગ્નિ", "દક્ષિણ", "નૈઋત્ય", "પશ્ચિમ", "વાયવ્ય"];
+        const dirName = dirs[Math.round(deg / 45) % 8];
+        document.getElementById('compassDial').style.transform = `rotate(${-deg}deg)`;
+        document.getElementById('compassHeadingText').innerText = `${deg}° ${dirName}`;
+        document.getElementById('manualCompassSlider').value = deg;
+    }
+
+    function setManualCompass(val) {
+        updateCompassUI(parseFloat(val));
+    }
+
+    function handleOrient(e) {
+        let heading = null;
+        if (e.webkitCompassHeading !== undefined) {
+            heading = e.webkitCompassHeading;
+        } else if (e.alpha !== null) {
+            heading = 360 - e.alpha;
+        }
+        if (heading !== null) {
+            sensorGotData = true;
+            document.getElementById('btnSensor').innerText = "✅ સેન્સર ચાલુ";
+            updateCompassUI(heading);
+        }
+    }
+
+    function enableCompass() {
+        const btn = document.getElementById('btnSensor');
+        btn.innerText = "⏳ તપાસે છે...";
+
+        if (typeof DeviceOrientationEvent !== 'undefined' && typeof DeviceOrientationEvent.requestPermission === 'function') {
+            DeviceOrientationEvent.requestPermission().then(state => {
+                if (state === 'granted') {
+                    window.addEventListener('deviceorientation', handleOrient, true);
+                } else {
+                    btn.innerText = "❌ પરમિશન રદ";
+                }
+            });
+        } else {
+            // Android Chrome requires deviceorientationabsolute for true North
+            window.addEventListener('deviceorientationabsolute', handleOrient, true);
+            window.addEventListener('deviceorientation', handleOrient, true);
+            setTimeout(() => {
+                if (!sensorGotData) {
+                    btn.innerText = "⚠️ સેન્સર ઉપલબ્ધ નથી";
+                    alert("તમારા બ્રાઉઝર કે ડિવાઇસમાંથી કંપાસ સેન્સર ડેટા મળ્યો નથી. નીચેના સ્લાઇડરથી દિશા ચકાસી શકો છો.");
+                }
+            }, 2000);
+        }
+    }
+
+    function openSettings() {
+        document.getElementById('ayanamsaSelect').value = settings.ayanamsa;
+        document.getElementById('monthSystemSelect').value = settings.monthSystem;
+        document.getElementById('settingsModal').style.display = 'flex';
+    }
+    function saveSettings() {
+        settings.ayanamsa = document.getElementById('ayanamsaSelect').value;
+        settings.monthSystem = document.getElementById('monthSystemSelect').value;
+        localStorage.setItem('kaalshodh_settings', JSON.stringify(settings));
+        updateAll();
+    }
+    function closeSettings() {
+        saveSettings();
+        document.getElementById('settingsModal').style.display = 'none';
+    }
+
+    window.onload = () => {
+        initMyTithiForm();
+        updateAll();
+    };
+</script>
+</body>
+</html>
