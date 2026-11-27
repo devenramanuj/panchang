@@ -1,0 +1,566 @@
+<!DOCTYPE html>
+<html lang="gu">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>કાલશોધ પંચાંગ — સંપૂર્ણ વેદિક એપ</title>
+    <script src="https://cdn.jsdelivr.net/npm/astronomy-engine@2.1.19/astronomy.browser.min.js"></script>
+    <style>
+        :root {
+            --bg-dark: #120e07;
+            --card-bg: #1c160c;
+            --card-alt: #251d10;
+            --gold-primary: #d4af37;
+            --gold-light: #f5d36c;
+            --gold-dim: #735c1e;
+            --text-main: #f7eedc;
+            --text-muted: #ab9a7a;
+            --good-green: #4caf50;
+            --bad-red: #ff5252;
+            --warn-orange: #ff9800;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        body {
+            background-color: var(--bg-dark);
+            color: var(--text-main);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh;
+            padding-bottom: 70px;
+        }
+
+        .app-shell {
+            width: 100%;
+            max-width: 480px;
+            background: var(--card-bg);
+            min-height: 100vh;
+            border-left: 1px solid rgba(212, 175, 55, 0.2);
+            border-right: 1px solid rgba(212, 175, 55, 0.2);
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* Top Bar */
+        .top-bar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 14px;
+            background: #171209;
+            border-bottom: 1px solid var(--gold-dim);
+            position: sticky;
+            top: 0;
+            z-index: 50;
+        }
+
+        .brand {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-weight: bold;
+            font-size: 1.05rem;
+            color: var(--gold-light);
+        }
+
+        .swastik-icon {
+            background: #e65100;
+            color: #fff;
+            width: 26px;
+            height: 26px;
+            border-radius: 6px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1rem;
+        }
+
+        .top-controls {
+            display: flex;
+            gap: 6px;
+            align-items: center;
+        }
+
+        select.mini-select, button.mini-btn {
+            background: var(--card-alt);
+            color: var(--gold-light);
+            border: 1px solid var(--gold-dim);
+            padding: 4px 7px;
+            border-radius: 8px;
+            font-size: 0.75rem;
+            outline: none;
+            cursor: pointer;
+        }
+
+        /* Global Date Bar */
+        .global-date-bar {
+            background: #140f08;
+            padding: 8px 14px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid rgba(212, 175, 55, 0.18);
+            font-size: 0.85rem;
+        }
+
+        .date-nav-group {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .nav-arrow {
+            background: var(--card-alt);
+            border: 1px solid var(--gold-dim);
+            color: var(--gold-light);
+            width: 26px;
+            height: 26px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+
+        /* Sections / Views */
+        .view-section {
+            display: none;
+            padding: 12px;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .view-section.active {
+            display: flex;
+        }
+
+        /* Cards */
+        .card {
+            background: var(--card-alt);
+            border: 1px solid rgba(212, 175, 55, 0.25);
+            border-radius: 12px;
+            padding: 12px;
+        }
+
+        .card-title {
+            font-size: 0.9rem;
+            font-weight: bold;
+            color: var(--gold-light);
+            margin-bottom: 8px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid rgba(212, 175, 55, 0.15);
+            padding-bottom: 5px;
+        }
+
+        /* Grids */
+        .grid-2 {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 8px;
+        }
+
+        .grid-4 {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 6px;
+            text-align: center;
+        }
+
+        .stat-box {
+            background: #161108;
+            padding: 8px;
+            border-radius: 8px;
+            border: 1px solid rgba(212, 175, 55, 0.15);
+        }
+
+        .stat-label {
+            font-size: 0.7rem;
+            color: var(--text-muted);
+        }
+
+        .stat-val {
+            font-size: 0.88rem;
+            font-weight: bold;
+            color: var(--text-main);
+            margin-top: 2px;
+        }
+
+        .stat-sub {
+            font-size: 0.68rem;
+            color: var(--gold-primary);
+            margin-top: 2px;
+        }
+
+        /* Pill Tabs */
+        .sub-tabs {
+            display: flex;
+            gap: 6px;
+            background: #120e07;
+            padding: 4px;
+            border-radius: 18px;
+            border: 1px solid var(--gold-dim);
+            overflow-x: auto;
+        }
+
+        .sub-tab {
+            flex: 1;
+            padding: 5px 8px;
+            border: none;
+            border-radius: 14px;
+            background: transparent;
+            color: var(--text-muted);
+            font-size: 0.78rem;
+            font-weight: bold;
+            cursor: pointer;
+            white-space: nowrap;
+        }
+
+        .sub-tab.active {
+            background: var(--gold-primary);
+            color: #120e07;
+        }
+
+        /* Canvas Chakra */
+        .canvas-box {
+            width: 100%;
+            aspect-ratio: 1 / 1;
+            position: relative;
+        }
+
+        canvas {
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+        }
+
+        /* Slider */
+        input[type="range"] {
+            width: 100%;
+            -webkit-appearance: none;
+            height: 7px;
+            background: #2e2412;
+            border-radius: 5px;
+            border: 1px solid var(--gold-dim);
+        }
+
+        input[type="range"]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            width: 22px;
+            height: 22px;
+            border-radius: 50%;
+            background: var(--gold-primary);
+            border: 2px solid #fff;
+            cursor: pointer;
+        }
+
+        /* Tables */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.8rem;
+        }
+
+        th, td {
+            padding: 7px 5px;
+            border-bottom: 1px solid rgba(212, 175, 55, 0.15);
+            text-align: left;
+        }
+
+        th {
+            color: var(--gold-light);
+            font-size: 0.75rem;
+        }
+
+        .badge-good { color: var(--good-green); font-weight: bold; }
+        .badge-bad { color: var(--bad-red); font-weight: bold; }
+        .badge-neutral { color: var(--warn-orange); font-weight: bold; }
+        .row-active { background: rgba(212, 175, 55, 0.18); border-left: 3px solid var(--gold-light); }
+
+        /* Calendar Grid */
+        .cal-grid {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 4px;
+            text-align: center;
+        }
+
+        .cal-head {
+            font-size: 0.72rem;
+            color: var(--gold-light);
+            padding: 4px 0;
+            font-weight: bold;
+        }
+
+        .cal-day {
+            background: #161108;
+            border: 1px solid rgba(212, 175, 55, 0.15);
+            border-radius: 8px;
+            padding: 5px 2px;
+            min-height: 52px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            cursor: pointer;
+        }
+
+        .cal-day.today {
+            border: 1.5px solid var(--gold-light);
+            background: rgba(212, 175, 55, 0.15);
+        }
+
+        .cal-day .g-date { font-size: 0.85rem; font-weight: bold; }
+        .cal-day .h-tithi { font-size: 0.62rem; color: var(--text-muted); }
+        .cal-day .fest-dot { width: 5px; height: 5px; background: #ff5252; border-radius: 50%; margin: 0 auto; }
+
+        /* Bottom Navigation */
+        .bottom-nav {
+            position: fixed;
+            bottom: 0;
+            width: 100%;
+            max-width: 480px;
+            background: #171209;
+            border-top: 1px solid var(--gold-dim);
+            display: flex;
+            justify-content: space-around;
+            padding: 6px 0;
+            z-index: 60;
+        }
+
+        .nav-item {
+            background: none;
+            border: none;
+            color: var(--text-muted);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 2px;
+            font-size: 0.68rem;
+            cursor: pointer;
+            padding: 4px 6px;
+        }
+
+        .nav-item.active {
+            color: var(--gold-light);
+            font-weight: bold;
+        }
+
+        .nav-item span.icon {
+            font-size: 1.2rem;
+        }
+
+        /* Inputs & Buttons */
+        .form-input {
+            width: 100%;
+            background: #120e07;
+            border: 1px solid var(--gold-dim);
+            color: var(--text-main);
+            padding: 7px 10px;
+            border-radius: 8px;
+            font-size: 0.82rem;
+            color-scheme: dark;
+        }
+
+        .btn-gold {
+            background: linear-gradient(135deg, #d4af37, #a88218);
+            color: #120e07;
+            border: none;
+            padding: 8px 14px;
+            border-radius: 8px;
+            font-weight: bold;
+            font-size: 0.82rem;
+            cursor: pointer;
+        }
+
+        /* Print styles for Kundali */
+        @media print {
+            body * { visibility: hidden; }
+            #view-kundali, #view-kundali * { visibility: visible; }
+            #view-kundali { position: absolute; left: 0; top: 0; width: 100%; background: #fff; color: #000; }
+        }
+    </style>
+</head>
+<body>
+
+<div class="app-shell">
+    <!-- Top Bar -->
+    <div class="top-bar">
+        <div class="brand">
+            <div class="swastik-icon">卐</div>
+            <span>કાલશોધ પંચાંગ</span>
+        </div>
+        <div class="top-controls">
+            <select id="citySelect" class="mini-select" onchange="changeCity(this.value)">
+                <option value="22.37,71.98,ધંધુકા">📍 ધંધુકા</option>
+                <option value="23.02,72.57,અમદાવાદ">📍 અમદાવાદ</option>
+                <option value="21.76,72.15,ભાવનગર">📍 ભાવનગર</option>
+                <option value="22.30,70.80,રાજકોટ">📍 રાજકોટ</option>
+                <option value="21.17,72.83,સુરત">📍 સુરત</option>
+                <option value="22.30,73.18,વડોદરા">📍 વડોદરા</option>
+                <option value="23.21,72.63,ગાંધીનગર">📍 ગાંધીનગર</option>
+                <option value="21.52,70.45,જૂનાગઢ">📍 જૂનાગઢ</option>
+                <option value="22.47,70.05,જામનગર">📍 જામનગર</option>
+                <option value="23.24,69.66,ભુજ">📍 ભુજ</option>
+                <option value="28.61,77.20,દિલ્હી">📍 દિલ્હી</option>
+                <option value="19.07,72.87,મુંબઈ">📍 મુંબઈ</option>
+                <option value="25.31,82.97,કાશી">📍 કાશી</option>
+                <option value="23.17,75.78,ઉજ્જૈન">📍 ઉજ્જૈન</option>
+                <option value="gps">📡 GPS</option>
+            </select>
+            <button class="mini-btn" onclick="openSettings()">⚙️</button>
+        </div>
+    </div>
+
+    <!-- Global Date Navigation -->
+    <div class="global-date-bar">
+        <div class="date-nav-group">
+            <button class="nav-arrow" onclick="shiftDays(-1)">◀</button>
+            <span id="headerDateLabel" style="font-weight:bold; color:var(--gold-light);">--</span>
+            <button class="nav-arrow" onclick="shiftDays(1)">▶</button>
+        </div>
+        <div class="date-nav-group">
+            <input type="datetime-local" id="globalDateTimeInput" class="mini-select" style="color-scheme:dark;" onchange="setExactDateTime(this.value)">
+            <button class="mini-btn" onclick="resetToNow()">હમણાં</button>
+        </div>
+    </div>
+
+    <!-- ==================== TAB 1: TODAY'S PANCHANG & CLOCK ==================== -->
+    <div id="view-panchang" class="view-section active">
+        <!-- Running Now Banner -->
+        <div class="card" style="background: linear-gradient(145deg, #261d0e, #181208); border-color: var(--gold-primary);">
+            <div style="display:flex; justify-content:space-between; align-items:center;">
+                <div>
+                    <div style="font-size:0.75rem; color:var(--gold-primary);" id="samvatHeader">વિક્રમ સંવત 2083 • શક 1948</div>
+                    <div style="font-size:1.15rem; font-weight:bold; color:var(--gold-light); margin-top:2px;" id="mainTithiTitle">--</div>
+                    <div style="font-size:0.78rem; color:var(--text-muted);" id="mainMonthVaar">--</div>
+                </div>
+                <div style="text-align:right;">
+                    <div style="font-size:0.7rem; color:var(--text-muted);">વૈદિક ઘડિયાળ (ઘટી:પળ:વિપળ)</div>
+                    <div style="font-size:1.25rem; font-weight:bold; color:#ffeb3b; font-family:monospace;" id="liveGhatiClock">00:00:00</div>
+                    <div style="font-size:0.7rem; color:var(--gold-primary);" id="paharLabel">પ્રથમ પ્રહર</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Sun & Moon Rise/Set -->
+        <div class="grid-4">
+            <div class="stat-box">
+                <div class="stat-label">🌅 સૂર્યોદય</div>
+                <div class="stat-val" id="sunriseVal">--:--</div>
+            </div>
+            <div class="stat-box">
+                <div class="stat-label">🌇 સૂર્યાસ્ત</div>
+                <div class="stat-val" id="sunsetVal">--:--</div>
+            </div>
+            <div class="stat-box">
+                <div class="stat-label">🌙 ચંદ્રોદય</div>
+                <div class="stat-val" id="moonriseVal">--:--</div>
+            </div>
+            <div class="stat-box">
+                <div class="stat-label">🌘 ચંદ્રાસ્ત</div>
+                <div class="stat-val" id="moonsetVal">--:--</div>
+            </div>
+        </div>
+
+        <!-- Panchang 5 Angas with End Times -->
+        <div class="card">
+            <div class="card-title">
+                <span>આજનું પંચાંગ (સમાપ્તિ સમય સાથે)</span>
+                <span id="ayanaRituBadge" style="font-size:0.72rem; color:var(--text-muted);">--</span>
+            </div>
+            <table>
+                <tbody id="panchangAngaTable"></tbody>
+            </table>
+        </div>
+
+        <!-- Running Choghadiya & Hora Quick Card -->
+        <div class="grid-2">
+            <div class="stat-box" style="border-color: var(--gold-dim);">
+                <div class="stat-label">⏳ હાલનું ચોઘડિયું</div>
+                <div class="stat-val" id="nowChoghadiya">--</div>
+                <div class="stat-sub" id="nowChoghadiyaEnd">બાકી: --</div>
+            </div>
+            <div class="stat-box" style="border-color: var(--gold-dim);">
+                <div class="stat-label">🪐 હાલની હોરા</div>
+                <div class="stat-val" id="nowHora">--</div>
+                <div class="stat-sub" id="nowHoraEnd">આગળ: --</div>
+            </div>
+        </div>
+
+        <!-- Sankalp Mantra & Disha Yantra -->
+        <div class="card">
+            <div class="card-title">
+                <span>🙏 આજનો પૂજા સંકલ્પ મંત્ર</span>
+                <button class="mini-btn" onclick="copySankalp()">કોપી કરો</button>
+            </div>
+            <p id="sankalpText" style="font-size:0.8rem; line-height:1.55; color:#f3dfb9; font-style:italic;"></p>
+        </div>
+
+        <!-- Disha Yantra Compass -->
+        <div class="card">
+            <div class="card-title">
+                <span>🧭 દિશા યંત્ર (વાસ્તુ ખૂણા)</span>
+                <button class="mini-btn" onclick="enableCompass()">સેન્સર ચાલુ કરો</button>
+            </div>
+            <div style="display:flex; align-items:center; justify-content:space-around; padding:6px 0;">
+                <div id="compassDial" style="width:90px; height:90px; border-radius:50%; border:2px solid var(--gold-primary); position:relative; display:flex; align-items:center; justify-content:center; transition:transform 0.2s;">
+                    <span style="position:absolute; top:4px; font-size:0.7rem; color:#ff5252; font-weight:bold;">ઉ</span>
+                    <span style="position:absolute; bottom:4px; font-size:0.7rem;">દ</span>
+                    <span style="position:absolute; right:6px; font-size:0.7rem; color:var(--gold-light);">પૂ</span>
+                    <span style="position:absolute; left:6px; font-size:0.7rem;">પ</span>
+                    <div style="width:4px; height:36px; background:linear-gradient(to top, #fff 50%, #ff5252 50%); border-radius:2px;"></div>
+                </div>
+                <div style="font-size:0.76rem; line-height:1.6; color:var(--text-muted);">
+                    <div>• <b>ઈશાન (ઉત્તર-પૂર્વ):</b> પૂજા / જળ</div>
+                    <div>• <b>અગ્નિ (દક્ષિણ-પૂર્વ):</b> રસોડું</div>
+                    <div>• <b>નૈઋત્ય (દક્ષિણ-પશ્ચિમ):</b> મુખ્ય કક્ષ</div>
+                    <div>• <b>વાયવ્ય (ઉત્તર-પશ્ચિમ):</b> અતિથિ / વાયુ</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ==================== TAB 2: SKY CHAKRA (KALSHODH WHEEL) ==================== -->
+    <div id="view-chakra" class="view-section">
+        <div class="sub-tabs">
+            <button class="sub-tab active" id="tabLagnaTop" onclick="setChakraMode('lagna')">લગ્ન ઉપર ટિકા</button>
+            <button class="sub-tab" id="tabRashiTop" onclick="setChakraMode('rashi')">રાશિ ચક્ર</button>
+            <button class="sub-tab" onclick="switchTab('kundali')">જન્મ કુંડળી ⊞</button>
+        </div>
+
+        <div class="canvas-box">
+            <canvas id="chakraCanvas" width="700" height="700"></canvas>
+        </div>
+
+        <div id="chakraPlanetBanner" style="text-align:center; font-size:0.88rem; color:#ff8a65; font-weight:bold;">
+            ગ્રહ પર ક્લિક કરો
+        </div>
+
+        <div class="card">
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px; font-size:0.78rem;">
+                <span>સ્લાઇડર ગતિ:</span>
+                <select id="sliderStepUnit" class="mini-select" onchange="anchorDate = new Date(currentDate); document.getElementById('timeScrubber').value = 0;">
+                    <option value="1">1 મિનિટ</option>
+                    <option value="15" selected>15 મિનિટ</option>
+                    <option value="60">1 કલાક</option>
+                    <option value="1440">1 દિવસ</option>
+                </select>
+                <button class="mini-btn" onclick="resetToNow()">હમણાં</button>
+            </div>
+            <input type="range" id="timeScrubber" min="-100" max="100" value="0" oninput="onScrub(this.value)" onchange="anchorDate = new Date(currentDate); this.value = 0;">
+        </div>
+    </div>
+
+    <!-- ==================== TAB 3: CHOGHADIYA & MUHURAT ==================== -->
+    <div id="view-muhurat" class="view-section">
+        <div class="sub-tabs">
+            <button class="sub-tab active" id="mTabChoghadiya" onclick="showMuhuratSub('choghadiya')">ચોઘડિયા</button>
+            <button class="sub-tab" id="mTabKaal" onclick="showMuhuratSub('kaal')">રાહુકાળ / મુહૂર્ત</button>
+            <button clas
